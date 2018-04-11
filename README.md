@@ -1,1 +1,1 @@
-Projet PerfSONAR - Observatoire Astronimique de Strasbourg
+Projet PerfSONAR - Observatoire Astronomique de Strasbourg
