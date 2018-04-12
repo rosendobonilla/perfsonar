@@ -1,0 +1,9 @@
+1. Installer perfsonar-toolkit dans les hosts - http://docs.perfsonar.net/install_options.html
+2. Création des utilisateurs qui vont administrer l'interface web de perfsoNAR Toolkit - http://docs.perfsonar.net/manage_users.html
+3. Créer le fichier mesh-configuration.conf - http://docs.perfsonar.net/multi_mesh_server_config.html#multi-service-config-json
+4. Convertir au format JSON - http://docs.perfsonar.net/multi_mesh_server_config.html#multi-service-config-json
+5. Publier le fichier JSON - http://docs.perfsonar.net/multi_mesh_server_config.html#multi-service-config-json
+6. Configurer les sondes pour qu'elles utilisent ce fichier - http://docs.perfsonar.net/multi_mesh_agent_config.html
+7. Installer maddash - http://software.es.net/maddash/quick_start.html
+8. Modifier maddash.yaml - https://lists.internet2.edu/sympa/arc/perfsonar-user/2017-03/msg00045.html
+9. Création du fichier maddash.conf automatiquement (perfSONAR Auto-Configuration) - http://software.es.net/maddash/mesh_config.html - Pas nécessaire à partir de la version 4.0 car c'est fait de manière automatique
