@@ -1,0 +1,50 @@
+3, arrivée
+Renseignement sur PerfSONAR
+Types de architecture
+Placement de noeuds (interieur/exterieur)
+Installation de PerfSONAR Bundle sur ma machine (Debian 9), rajout de dépôts perfsonar dans sources.list
+Création d'un test simple (ping) de la machine PerfSONAR au router de l'observatoire. Dans l'interface d'administration de PerfSONAR Toolkit
+4, continuacion documentation
+Révision plus en détail des méthodes de déploiment (beacon, island, mesh)
+Révision Hardware vs Machines virtuelles
+Révision architecture de PerfSONAR
+5,
+Vidéo-conférence avec M Renan PHILLIPE - présentation PerfSONAR
+Définition (à peu près) de l'architecture à mettre en place dans l'Observatoire
+Définition des étapes à suivre
+6,
+Création de deux machines virtuelles VirtualBox
+Problèmes avec ces deux machines-là
+Bascule sur LXC
+Installation de LXC, snapd et LXD pour gérer les conteneurs
+Création de deux conteneurs LXC et installation de PerfSONAR là dedans (node1.lxd et node2.lxd). Le premier noeud (node1.lxd) aura PerfSONAR Toolkit et MaddAsh
+Problèmes avec NTP (NTP non syncronisé) sur les conteneurs car je les avait mis en mode privilegié (Sol. changer à false security.privilegied dans la configuration des conteneurs)
+9, séminaire d'accueil
+Création du fichier mesh.conf pour administrer plusieurs hosts au même temps. On va y specifier l'enterprise ou organisation pour les sondes PerfSONAR, les sondes à superviser, les différents tests périodiques à réaliser, groupes de test et les serveurs d'archivage ou consulter les resultats des test pour ensuite creer les graphiques et les grids sur MaddAsh
+Conversion du fichier précedent au format JSON
+Publier le fichier sur un serveur web (apache2 dans ce cas)
+Configuration des clients pour utiliser le fichier (fichier /etc/perfsonar/meshconfig-agent.conf)
+Installation de MaddAsh sur une des deux conteneurs
+Création de la configuration - maddash.yaml (en fait il suffit de laisser dans le fichier de configuration par défaut le chemin de la base de données et le port sur lequel maddash va à écouter ou tout simplement de vider ce fichier là). Après ce dernier va être réécrit par l'outil perfsonar-meshconfig-guiagent de manière automatique
+Problèmes pour récuperer les données des test ("No data found" dans les graphics, pareil pour MaddAsh)
+10,
+Les test ne fonctionnent toujours pas, il semble être un problème avec les conteneurs LXC, genre DNS. En effet, dans l'interface web PerfSONAR Toolkit les test définis dans le fichier mesh.central.conf s'affichent cependant les test ne marchent pas
+Le probleme avec les conteneurs et les test était que l'outil pscheduler a un fichier appelle "limits.conf" ou on trouve des regles de blocage pour certains groupes d'addresses IP (des attacants connus, plages d'addresses privées, etc) y compris celui de LXC/LXD 10.254.11.0/24. Il a fallu enlever cette regle pour que les test etaient propagés.
+Problème bwctld[21699]: FILE=sapi.c, LINE=391, BWLControlAccept(): Unable to read ClientGreeting message. Pas de solution por l'instant mais les test et les grids marchent.
+Pour l'instant les grids sur l'interface MaddAsh marchent bien on peut voir les test qui échouent et ceux qui réussisent (plutôt les paquets perdus). Cependant, je vois des paquets perdus de node2.lxd vers node1.lxd même si dans les graphics ils s'affichent correctement. De node1.lxd à node2.lxd il n'y a pas de soucis, tout marche bien.
+Quelques minutes après tous les test de latence entre les deux noeuds marchent bien, pas de problèmes rencontrés dans le grid; il semble OK. Je pense qu'il suffissait juste d'attendre un peu pour que les données étaient propagés dans les deux directions.
+11,
+Installation de CentOS 7 sur la machine qui sera la sonde dans le Batiment Sud
+Création du fichier mesh-central.conf adapté aux sondes de l'observatoire
+Création des machines virtuelles VMWare (sondes coupule et Est)
+12,
+Révision de la méthode pour utiliser deux interfaces pour lancer des tests différents
+Division des hosts par organization (Observatoire Astronomique de Strasbourg et IPHC/CNRS Strasbourg)
+Création de nouveaux tests pour la mesure de la bande pasante en UDP et TCP
+Définition et création des groupes pour les tests
+Modification du fichier mesh-central.conf pour prendre en compte les tests vers des sondes à l'exterieur
+Problemes avec les conteneurs LXC, cette erreur apparait toujours une fois la machine redemarre. Le probleme est que les conteneurs n'arrivent pas a recuperer une addresse IP (Sol. redemarrer le service snapd et snap restart lxd)
+Les machines virtuelles pour mettre en place les sondes reelles ne sont pas pour l'instant disponibles, je fais donc des tests sur les conteneurs LXC
+Plusieurs problemes avec le nouveau fichier mesh-conf. D'abord, je peut pas definir un groupe "start" car il y a des soucis pour créer la configuration de maddash, je donc opté pour un groupe "disjoint". Ce groupe on l'utilisera pour etablir des test avec de sondes a l'exterieur. Ensuite, j'ai du changer aussi l'instruction "no_agent".
+Probleme Couldn't find a tool in common among the participants. Selon moi ca vient des test qui se lancent a l'exterieur (avec la sonde CNRS Strasbourg par exemple) et alors il y a des problemes de compatibilité entre les outils de test des deux sondes (evidemment on connait pas du tout les outils qu'ils on mis en place).
+Les grids sur MaddAsh semblent bien marcher sauf pour les tests a l'exterieur que l'on corrigera dans les sonde reelles
