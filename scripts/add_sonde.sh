@@ -32,7 +32,7 @@ ip="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[
 if [ $x -eq 1 ] ; then
 if [[ $SERVER =~ $ip ]] ; then
   if ping -c 1 $SERVER &> /dev/null ; then 
-    echo "Success"
+    ./maj_mesh-config.sh
   else
     echo "Le serveur n'est pas disponible. Veulliez vérifier l'addresse ou essayez plus tard."
   fi
