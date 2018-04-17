@@ -18,11 +18,15 @@
 
 x=0
 
-while getopts s: option; do
+while getopts s:f option; do
   case $option in
     s)
       x=1
       SERVER=${OPTARG}
+      ;;
+    f)
+      f=1
+      FICHIER=${OPTARG}
       ;;
   esac
 done
@@ -33,7 +37,9 @@ if [ $x -eq 1 ] ; then
 if [[ $SERVER =~ $ip ]] ; then
   if ping -c 1 $SERVER &> /dev/null ; then 
 #    ./maj_mesh-config.sh
-    
+    if curl -f http://$SERVER/$FICHIER ; then
+      echo "Le fichier n'existe pas."
+    fi
   else
     echo "Le serveur n'est pas disponible. Veulliez vérifier l'addresse ou essayez plus tard."
   fi
