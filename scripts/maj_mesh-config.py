@@ -15,3 +15,5 @@ template = env.get_template('template.jinja2')
 
 print(template.render(config_data))
 
+print "\n******************************************************************\nConfiguration complète"
+
