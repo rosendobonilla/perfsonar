@@ -1,0 +1,43 @@
+
+#debut_site
+
+    <site>
+        <location>
+            city    {{ ville }}
+            state   {{ etat }} 
+            latitude   {{ lat }}
+            longitude  {{ lon }}
+        </location>
+
+        <host>
+              description {{ desc }}
+              address {{ add }}
+
+              <measurement_archive>
+                    type traceroute
+                    read_url http://{{ add }}/esmond/perfsonar/archive
+                    write_url http://{{ add }}/esmond/perfsonar/archive
+              </measurement_archive>
+
+              <measurement_archive>
+                    type perfsonarbuoy/owamp
+                    read_url http://{{ add }}/esmond/perfsonar/archive
+                    write_url http://{{ add }}/esmond/perfsonar/archive
+              </measurement_archive>
+
+              <measurement_archive>
+                    type perfsonarbuoy/bwctl
+                    read_url http://{{ add }}/esmond/perfsonar/archive
+                    write_url http://{{ add }}/esmond/perfsonar/archive
+              </measurement_archive>
+
+              <measurement_archive>
+                    type pinger
+                    read_url http://{{ add }}/esmond/perfsonar/archive
+                    write_url http://{{ add }}/esmond/perfsonar/archive
+              </measurement_archive>
+        </host>
+    </site>
+
+#fin_site
+
