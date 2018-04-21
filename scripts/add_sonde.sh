@@ -1,12 +1,12 @@
 #!/bin/bash
 
 echo -e "Script pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
-s=false ; f=false ; ver="7"
+optSRV=false ; optFICH=false
 declare -A startServices=( ['0']="pscheduler-scheduler" ['1']="pscheduler-runner" ['2']="pscheduler-ticker" ['3']="pscheduler-archiver" ['4']="owamp-server" ['5']="bwctl-server" )
 
 function aide { 
    echo ""
-   echo -e "Usage : \n$0 -s <address> -f <fichier.JSON>" 1>&2; 
+   echo "Usage : $0 -s <address> -f <fichier.JSON>" 1>&2; 
    echo ""
    echo "-s : L'addresse du serveur perfSONAR"
    echo "-f : Le nom du fichier JSON"
@@ -21,11 +21,11 @@ fi
 while getopts "s:f:" opts; do
   case $opts in
     s)
-      s=true
+      optSRV=true
       SERVER=${OPTARG}
       ;;
     f)
-      f=true
+      optFICH=true
       FICHIER=${OPTARG}
       ;;
     \?)
@@ -39,7 +39,7 @@ done
 
 function demarrerServices {
 
-  for s in "${startServices[@]}"
+  for s in "${startServices[@]}" ; do
     service $i start
   done
   
@@ -67,8 +67,8 @@ function paquets {
 
 #ip="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 
-
-if [ $x ] && [ $s ] ; then
+echo "$s $f"
+if [ $optSRV ] && [ $optFICH ]; then
 
 reponse=2
 while [ $reponse -ne 1 ] && [ $reponse -ne 0 ] ; do
@@ -84,23 +84,11 @@ if ping -c 1 $SERVER &> /dev/null ; then
   if curl -f http://$SERVER/$FICHIER ; then
     echo -e "\n*******************************************************************\nFichier JSON trouvé ..."
     sleep 2
-    echo -e "\n\nINFORMATION: EMPLACEMENT DE LA SONDE. Entrez la ville :"
-    read city
-    echo "INFORMATION: EMPLACEMENT DE LA SONDE. Entrez l'état :"
-    read state
-    echo "INFORMATION: EMPLACEMENT DE LA SONDE. Entrez la latitude :"
-    read lati
-    echo "INFORMATION: EMPLACEMENT DE LA SONDE. Entrez la longitude :"
-    read longi
-    echo "INFORMATION: Entrez une description :"
+    echo -e "\nINFORMATION: Entrez une description :"
     read descr
-    echo "INFORMATION: Entrez l'addresse de la sonde :"
+    echo -e "\nINFORMATION: Entrez l'addresse de la sonde :"
     read addr
 
-    echo "ville: "$city"" >> ./data.yaml
-    echo "etat: "$state"" >> ./data.yaml
-    echo "lat: "$lati"" >> ./data.yaml
-    echo "lon: "$longi"" >> ./data.yaml
     echo "dec: "$descr"" >> ./data.yaml
     echo "add: "$addr"" >> ./data.yaml
 
