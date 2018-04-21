@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -e "Script pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
-optSRV=false ; optFICH=false
+optSRV="0" ; optFICH="0"
 declare -A startServices=( ['0']="pscheduler-scheduler" ['1']="pscheduler-runner" ['2']="pscheduler-ticker" ['3']="pscheduler-archiver" ['4']="owamp-server" ['5']="bwctl-server" )
 
 function aide { 
@@ -21,11 +21,11 @@ fi
 while getopts "s:f:" opts; do
   case $opts in
     s)
-      optSRV=true
+      optSRV="1"
       SERVER=${OPTARG}
       ;;
     f)
-      optFICH=true
+      optFICH="1"
       FICHIER=${OPTARG}
       ;;
     \?)
@@ -67,37 +67,55 @@ function paquets {
 
 #ip="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 
-echo "$s $f"
-if [ $optSRV ] && [ $optFICH ]; then
+if [ $optSRV == "1" ] && [ $optFICH == "1" ]; then
 
-reponse=2
-while [ $reponse -ne 1 ] && [ $reponse -ne 0 ] ; do
-  echo -e "Ce système a-t-il installé à partir de l'image CentOS Full Install ISO ? [1=oui/0=non]"
-  read reponse
-done
+#reponse=2
+#while [ $reponse -ne 1 ] && [ $reponse -ne 0 ] ; do
+#  echo -e "Ce système a-t-il installé à partir de l'image CentOS Full #Install ISO ? [1=oui/0=non]"
+#  read reponse
+#done
 
-if [ $reponse -eq 0 ] ; then
-  paquets
+if (whiptail --title "Image CentOS perfSONAR" --yesno "Ce système a-t-il installé à partir de l'image CentOS Full Install ISO ?" 8 78) then
+    echo -e "\nAucun paquet à installer.\n"
+else
+    paquets
 fi
 
 if ping -c 1 $SERVER &> /dev/null ; then 
   if curl -f http://$SERVER/$FICHIER ; then
     echo -e "\n*******************************************************************\nFichier JSON trouvé ..."
     sleep 2
-    echo -e "\nINFORMATION: Entrez une description :"
-    read descr
-    echo -e "\nINFORMATION: Entrez l'addresse de la sonde :"
-    read addr
+    
+    descr=$(whiptail --inputbox "Entrez une description pour identifier la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+                        
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+      echo "Description établie."
+    else
+      echo "Installation interrompue."
+      exit 1
+    fi
+    
+    addr=$(whiptail --inputbox "Entrez l'addresse de la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+                                                            
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+      echo "Addresse établie."
+    else
+      echo "Installation interrompue."
+      exit 1
+    fi
+    
+    echo "$descr $addr"
+    #echo "desc: "$descr"" >> ./data.yaml
+    #echo "add: "$addr"" >> ./data.yaml
 
-    echo "dec: "$descr"" >> ./data.yaml
-    echo "add: "$addr"" >> ./data.yaml
-
-    echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
-    sleep 2
-    ./maj_mesh-config.py
-    echo -e "\n***********************************************************************\nNettoyage ..."
-    rm -f ./data.yaml
-    sleep 1
+    #echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
+    #sleep 2
+    #./maj_mesh-config.py
+    #echo -e "\n***********************************************************************\nNettoyage ..."
+    #rm -f ./data.yaml
+    #sleep 1
   else
     echo -e "\nLe fichier entré n'existe pas dans le serveur !"
   fi
