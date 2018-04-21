@@ -65,15 +65,8 @@ function paquets {
   demarrerServices
 }
 
-#ip="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 
 if [ $optSRV == "1" ] && [ $optFICH == "1" ]; then
-
-#reponse=2
-#while [ $reponse -ne 1 ] && [ $reponse -ne 0 ] ; do
-#  echo -e "Ce système a-t-il installé à partir de l'image CentOS Full #Install ISO ? [1=oui/0=non]"
-#  read reponse
-#done
 
 if (whiptail --title "Image CentOS perfSONAR" --yesno "Ce système a-t-il installé à partir de l'image CentOS Full Install ISO ?" 8 78) then
     echo -e "\nAucun paquet à installer.\n"
