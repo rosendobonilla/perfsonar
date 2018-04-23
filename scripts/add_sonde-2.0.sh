@@ -101,12 +101,14 @@ appel_script_modif () {
       return 1
    else
       ./maj_mesh-config.py "${FICHIER}"
+      sed -i "0,/#add_sonde/ s/#add_sonde//" mesh_tmp.conf
       echo -e "\n+-----------------------------------------------------------------+\n"
       echo -e "Nettoyage...\n"
       echo -e "\n+-----------------------------------------------------------------+\n"
       rm -f ./data.yaml
-      rm -f mesh_tmp.conf
-      rm -f $FICHIER
+      #rm -f ./mesh_tmp.conf
+      rm -f ./config
+      rm -f ./$FICHIER
       sleep 1
    fi
    return 0
