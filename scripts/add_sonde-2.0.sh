@@ -23,13 +23,13 @@ assurer_root () {
    return 0
 }
 
+dependences_script () {
+   if [[ -e "/etc/debian_version" ]]; then
 
-#if [[ -e "/etc/debian_version" ]]; then
-
-#elif [[ -e "/etc/centos-release" ]]; then
+   elif [[ -e "/etc/centos-release" ]]; then
   
-#fi
-
+   fi
+}
 assurer_entres () {
    if [ $optSRV != "1" ] && [ $optFICH != "1" ]; then
       retur 1
@@ -51,6 +51,45 @@ fichier_json () {
    return 1
 }
 
+information () {
+    descr=$(whiptail --inputbox "Entrez une description pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+                        
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+      echo "Description établie."
+    else
+      echo "Installation interrompue."
+      return 1
+    fi
+    
+    addr=$(whiptail --inputbox "Entrez l'addresse de la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+                                                            
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+      echo "Addresse établie."
+    else
+      echo "Installation interrompue."
+      return 1
+    fi
+    
+    id=$(whiptail --inputbox "Entrez une identifient pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+                        
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+      echo "Identifient établie."
+    else
+      echo "Installation interrompue."
+      return 1
+    fi
+    return 0
+}
+
+creation_data_yaml () {
+   echo "id: "$id"" >> ./data.yaml
+   echo "desc: "$descr"" >> ./data.yaml
+   echo "add: "$addr"" >> ./data.yaml
+   return 0
+}
 
 while getopts "s:f:" opts; do
   case $opts in
@@ -72,54 +111,33 @@ done
 echo -e "Script pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
 
 if ! assurer_root ; then
-    die "Vous devez être superutilisateur pour exécuter ce script" 1
+   die "Vous devez être superutilisateur pour exécuter ce script" 1
 fi
 
 if ! assurer_entres ; then
-    die "Il manque des paramètres pour le script" 1
+   die "Il manque des paramètres pour le script" 1
 fi
 
 if ! assurer_ping_reponse ; then
-    die "Le serveur n'est pas disponible. Veuilliez vérifier l'addresse ou ressayez plus tard." 1
+   die "Le serveur n'est pas disponible. Veuilliez vérifier l'addresse ou ressayez plus tard." 1
 fi
 
 if ! fichier_json ; then
-    die "Le fichier spécifié n'a pas été trouvé dans le serveur." 1
+   die "Le fichier spécifié n'a pas été trouvé dans le serveur." 1
+else
+   echo -e "\n*******************************************************************\nFichier JSON trouvé ..."
+   sleep 2
 fi
 
+if ! information ; then
+   die "L'installation a été interrompue." 1
+fi
 
-    echo -e "\n*******************************************************************\nFichier JSON trouvé ..."
-    sleep 2
+if ! creation_data_yaml ; then
+   die "Erreur inconnue." 1
+fi
     
-    descr=$(whiptail --inputbox "Entrez une description pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
-                        
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
-      echo "Description établie."
-    else
-      echo "Installation interrompue."
-      exit 1
-    fi
     
-    addr=$(whiptail --inputbox "Entrez l'addresse de la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
-                                                            
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
-      echo "Addresse établie."
-    else
-      echo "Installation interrompue."
-      exit 1
-    fi
-    
-    id=$(whiptail --inputbox "Entrez une identifient pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
-                        
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
-      echo "Identifient établie."
-    else
-      echo "Installation interrompue."
-      exit 1
-    fi
     
     echo "id: "$id"" >> ./data.yaml
     echo "desc: "$descr"" >> ./data.yaml
