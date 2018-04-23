@@ -12,8 +12,10 @@ aide () {
 }   
 
 die () {
-    echo "Le script à echoué du à 'erreur suivante : $1"
-    exit "$2"
+   echo -e "\n+-----------------------------------------------------------------+\n"
+   echo -e "Le script à echoué du à l'erreur suivante : \n$1\n"
+   echo -e "\n+-----------------------------------------------------------------+\n"
+   exit "$2"
 }
 
 assurer_root () {
@@ -25,16 +27,16 @@ assurer_root () {
 
 dependences_script () {
    if [[ -e "/etc/debian_version" ]]; then
-
+      echo "Systeme Debian"
    elif [[ -e "/etc/centos-release" ]]; then
-  
+      echo "Systeme CentOS"
    fi
 }
 assurer_entres () {
-   if [ $optSRV != "1" ] && [ $optFICH != "1" ]; then
-      retur 1
+   if [ $optSRV == "1" ] && [ $optFICH == "1" ]; then
+      return 0
    fi
-   return 0
+   return 1
 }
 
 verifier_ping_reponse () {
@@ -46,48 +48,67 @@ verifier_ping_reponse () {
 
 fichier_json () {
    if curl -f http://$SERVER/$FICHIER ; then
+      wget "http://$SERVER/$FICHIER"
       return 0
    fi
    return 1
 }
 
 information () {
-    descr=$(whiptail --inputbox "Entrez une description pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+   descr=$(whiptail --inputbox "Entrez une description pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
                         
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
+   exitstatus=$?
+   if [ $exitstatus = 0 ]; then
       echo "Description établie."
-    else
+   else
       echo "Installation interrompue."
       return 1
-    fi
+   fi
     
-    addr=$(whiptail --inputbox "Entrez l'addresse de la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+   addr=$(whiptail --inputbox "Entrez l'addresse de la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
                                                             
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
+   exitstatus=$?
+   if [ $exitstatus = 0 ]; then
       echo "Addresse établie."
-    else
+   else
       echo "Installation interrompue."
       return 1
-    fi
+   fi
     
-    id=$(whiptail --inputbox "Entrez une identifient pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+   id=$(whiptail --inputbox "Entrez une identifient pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
                         
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
+   exitstatus=$?
+   if [ $exitstatus = 0 ]; then
       echo "Identifient établie."
-    else
+   else
       echo "Installation interrompue."
       return 1
-    fi
-    return 0
+   fi
+   return 0
 }
 
 creation_data_yaml () {
    echo "id: "$id"" >> ./data.yaml
    echo "desc: "$descr"" >> ./data.yaml
    echo "add: "$addr"" >> ./data.yaml
+   return 0
+}
+
+appel_script_modif () {
+   echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
+   sleep 2
+   if [ ! -f "./maj_mesh-config.py" ]; then
+      return 1
+   else
+      ./maj_mesh-config.py "${FICHIER}"
+      echo -e "\n+-----------------------------------------------------------------+\n"
+      echo -e "Nettoyage...\n"
+      echo -e "\n+-----------------------------------------------------------------+\n"
+      rm -f ./data.yaml
+      rm -f mesh_tmp.conf
+      rm -f $FICHIER
+      sleep 1
+   fi
    return 0
 }
 
@@ -115,10 +136,11 @@ if ! assurer_root ; then
 fi
 
 if ! assurer_entres ; then
+   aide
    die "Il manque des paramètres pour le script" 1
 fi
 
-if ! assurer_ping_reponse ; then
+if ! verifier_ping_reponse ; then
    die "Le serveur n'est pas disponible. Veuilliez vérifier l'addresse ou ressayez plus tard." 1
 fi
 
@@ -137,16 +159,6 @@ if ! creation_data_yaml ; then
    die "Erreur inconnue." 1
 fi
     
-    
-    
-    echo "id: "$id"" >> ./data.yaml
-    echo "desc: "$descr"" >> ./data.yaml
-    echo "add: "$addr"" >> ./data.yaml
-
-    echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
-    sleep 2
-    ./maj_mesh-config.py "${$FICHIER}"
-    echo -e "\n***********************************************************************\nNettoyage ..."
-    rm -f ./data.yaml
-    rm -f mesh_tmp.conf
-    sleep 1
+if ! appel_script_modif ; then
+   die "Le script de modification maj_mesh-config.py n'existe pas dans le répertoire actuel." 1
+fi

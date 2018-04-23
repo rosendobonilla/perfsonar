@@ -23,7 +23,7 @@ print "\n******************************************************************\nMod
 
 file = open("mesh_tmp.conf","wb") 
 
-for line in open("fich").readlines():
+for line in open(fich).readlines():
     file.write(line)
     if line.startswith("#add_sonde"):
         for line2 in open("template.jinja2").readlines():
