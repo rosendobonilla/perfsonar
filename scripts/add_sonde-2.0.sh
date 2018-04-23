@@ -3,7 +3,7 @@
 echo -e "Script pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
 optSRV="0" ; optFICH="0"
 
-function aide { 
+aide () { 
    echo ""
    echo "Usage : $0 -s <address> -f <fichier.JSON>" 1>&2; 
    echo ""
@@ -12,33 +12,24 @@ function aide {
    echo ""
 }   
 
-if [ "$EUID" -ne "0" ] ; then
-   echo -e "Vous devez être superutilisateur pour exécuter $0.";
-   exit 9
-fi
+die () {
+    echo "Le script à echoué du à 'erreur suivante : $1"
+    exit "${2:-1}"
+}
 
-while getopts "s:f:" opts; do
-  case $opts in
-    s)
-      optSRV="1"
-      SERVER=${OPTARG}
-      ;;
-    f)
-      optFICH="1"
-      FICHIER=${OPTARG}
-      ;;
-    \?)
-      aide
-      exit 1
-      ;;
-  esac
-done
+assurer_root () {
+   if [ "$EUID" -ne "0" ] ; then
+      return 1
+   fi
+   return 0
+}
 
-if [[ -e "/etc/debian_version" ]]; then
 
-elif [[ -e "/etc/centos-release" ]]; then
+#if [[ -e "/etc/debian_version" ]]; then
+
+#elif [[ -e "/etc/centos-release" ]]; then
   
-fi
+#fi
   
 if [ $optSRV == "1" ] && [ $optFICH == "1" ]; then
 
@@ -99,3 +90,23 @@ else
    aide
 fi
 
+while getopts "s:f:" opts; do
+  case $opts in
+    s)
+      optSRV="1"
+      SERVER=${OPTARG}
+      ;;
+    f)
+      optFICH="1"
+      FICHIER=${OPTARG}
+      ;;
+    \?)
+      aide
+      exit 1
+      ;;
+  esac
+done
+
+if ! assurer_root ; then
+    die "Vous devez être superutilisateur pour exécuter ce script" 1
+fi
