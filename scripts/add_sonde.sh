@@ -2,7 +2,6 @@
 
 echo -e "Script pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
 optSRV="0" ; optFICH="0"
-declare -A startServices=( ['0']="pscheduler-scheduler" ['1']="pscheduler-runner" ['2']="pscheduler-ticker" ['3']="pscheduler-archiver" ['4']="owamp-server" ['5']="bwctl-server" )
 
 function aide { 
    echo ""
