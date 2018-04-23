@@ -12,8 +12,8 @@ function aide {
    echo ""
 }   
 
-if [ "$UID" -ne "0" ] ; then
-   echo -e "Vous devez être superutilisateur pour exécuter $0. \nEssayez avec sudo $0";
+if [ "$EUID" -ne "0" ] ; then
+   echo -e "Vous devez être superutilisateur pour exécuter $0.";
    exit 9
 fi
 
@@ -34,7 +34,12 @@ while getopts "s:f:" opts; do
   esac
 done
 
+if [[ -e "/etc/debian_version" ]]; then
 
+elif [[ -e "/etc/centos-release" ]]; then
+  
+fi
+  
 if [ $optSRV == "1" ] && [ $optFICH == "1" ]; then
 
 if ping -c 1 $SERVER &> /dev/null ; then 
