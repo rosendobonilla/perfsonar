@@ -158,7 +158,28 @@ recuperation () {
 
 redemarrer_serv_perfsonar () {
    systemctl restart perfsonar-meshconfig-agent
+   if [ $? != "0" ] ; then
+      return 1
+   fi
    systemctl restart perfsonar-meshconfig-guiagent
+   if [ $? != "0" ] ; then
+      return 1
+   fi
+   return 0
+}
+
+#Affichage des derniers logs pour vérifier si tous s'est bien passé
+
+recuperer_logs () {
+   clear
+   echo -e "\n+-------------------------------------------------------------------------------------+\n"
+   echo -e "\n+----------------------DERNIERS LOGS MESHConfig AGENT---------------------------------+\n"
+   echo -e "\n+-------------------------------------------------------------------------------------+\n"
+   tail -15 /var/log/perfsonar/meshconfig-agent.log
+   echo -e "\n+-------------------------------------------------------------------------------------+\n"
+   echo -e "\n+----------------------DERNIERS LOGS MESHConfig GUIAGENT------------------------------+\n"
+   echo -e "\n+-------------------------------------------------------------------------------------+\n"
+   tail -15 /var/log/perfsonar/meshconfig-guiagent.log
 }
 
 #Appel au script en Python qui fera tous les modifications dans les fichiers correspondants
@@ -244,4 +265,10 @@ fi
     
 if ! appel_script_modif ; then
    die "Un erreur s'est produite pendant l'exécution de l'appel au script de modification du fichier JSON." 1
+fi
+
+if ! redemarrer_serv_perfsonar ; then
+   die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
+else
+   recuperer_logs
 fi
