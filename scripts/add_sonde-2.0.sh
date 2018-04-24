@@ -243,9 +243,9 @@ fi
 if ! assurer_entres ; then
    aide
    die "Il manque des paramètres pour le script" 1
+else
+   dependences_script
 fi
-
-dependences_script
 
 if ! verifier_ping_reponse ; then
    die "Le serveur n'est pas disponible. Veuilliez vérifier l'addresse ou ressayez plus tard." 1
