@@ -205,8 +205,6 @@ appel_script_modif () {
    fi
    rm -f $FICHIER.bak
    return 0
-   fi
-   return 0
 }
 
 #Valider les arguments passés comme paramètres
