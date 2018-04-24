@@ -16,8 +16,7 @@ config_data = yaml.load(open('./data.yaml'))
 env = Environment(loader = FileSystemLoader('./'), trim_blocks=True, lstrip_blocks=True)
 template = env.get_template('template.jinja2')
 
-temp = open("config","w+")
-temp.write(template.render(config_data))
+config = template.render(config_data)
 
 print "\n******************************************************************\nConfiguration complète"
 print "\n******************************************************************\nModification du fichier " + fich
@@ -27,9 +26,9 @@ file = open("mesh_tmp.conf","wb")
 for line in open(fich).readlines():
     file.write(line)
     if line.startswith("#add_sonde"):
-        for line2 in open("config").readlines():
-            print "Ciclo for"
-            file.write(line2)
+        file.write(config)
+        #for line2 in temp.readlines():
+        #    file.write(line2)
         file.write("#add_sonde\n")
 
 file.close

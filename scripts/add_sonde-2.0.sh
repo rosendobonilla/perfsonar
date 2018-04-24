@@ -46,9 +46,8 @@ verifier_ping_reponse () {
    return 1
 }
 
-fichier_json () {
-   if curl -f http://$SERVER/$FICHIER ; then
-      wget "http://$SERVER/$FICHIER"
+ver_fichier_conf () {
+   if [ -f "$FICHIER" ]; then
       return 0
    fi
    return 1
@@ -94,6 +93,19 @@ creation_data_yaml () {
    return 0
 }
 
+creation_json () {
+   path_SRV = "/var/www/html"
+   /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json $FICHIER
+   if [ $? != "0" ] ; then
+      return 1
+   fi
+   return 0
+}
+
+backup_fichiers () {
+   cp $FICHIER $FICHIER.bak
+}
+
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
    sleep 2
@@ -106,9 +118,13 @@ appel_script_modif () {
       echo -e "Nettoyage...\n"
       echo -e "\n+-----------------------------------------------------------------+\n"
       rm -f ./data.yaml
-      #rm -f ./mesh_tmp.conf
-      rm -f ./config
-      rm -f ./$FICHIER
+      rm -f $path_SRV/mesh_central.json
+      backup_fichiers
+      rm -f $FICHIER
+      mv ./mesh_tmp.conf $FICHIER
+      if ! creation_json ; then
+         die "Erreur dans la création de la nouvelle config pour le fichier JSON."
+      fi
       sleep 1
    fi
    return 0
@@ -146,10 +162,10 @@ if ! verifier_ping_reponse ; then
    die "Le serveur n'est pas disponible. Veuilliez vérifier l'addresse ou ressayez plus tard." 1
 fi
 
-if ! fichier_json ; then
-   die "Le fichier spécifié n'a pas été trouvé dans le serveur." 1
+if ! ver_fichier_conf ; then
+   die "Le fichier spécifié n'a pas été trouvé dans le chemin indiqué." 1
 else
-   echo -e "\n*******************************************************************\nFichier JSON trouvé ..."
+   echo -e "\n*******************************************************************\nFichier de conf MESH trouvé ..."
    sleep 2
 fi
 
