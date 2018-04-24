@@ -237,7 +237,7 @@ if ! assurer_root ; then
 fi
 
 if ! fichiers_script_presents ; then
-   die "Manque de fichiers nécessaires pour le script. Veuilliez vérifier qu'ils soient dans le répertoire courant. Fichiers: add_sonde.sh / maj_mesh-config.py / template.jinja2" 1
+   die "Manque de fichiers nécessaires pour le script. Veuilliez vérifier qu'ils sont dans le répertoire courant. Fichiers: add_sonde.sh / maj_mesh-config.py / template.jinja2" 1
 fi
 
 if ! assurer_entres ; then
