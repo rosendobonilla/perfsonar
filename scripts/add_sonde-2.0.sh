@@ -141,7 +141,8 @@ appel_script_modif () {
          fi
          die "Erreur dans la création de la nouvelle config pour le fichier JSON." 1
       fi
-      sleep 1
+      rm -f $FICHIER.bak
+      return 0
    fi
    return 0
 }
