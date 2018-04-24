@@ -7,8 +7,8 @@ aide () {
    echo ""
    echo "Usage : $0 -s <address> -f <fichier.JSON>" 1>&2; 
    echo ""
-   echo "-s : L'addresse du serveur perfSONAR"
-   echo "-f : Le nom du fichier JSON"
+   echo "-s : L'addresse du serveur perfSONAR. IP ou hostname."
+   echo "-f : Chemin du fichier mesh-config"
    echo ""
 }   
 
