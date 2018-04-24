@@ -35,6 +35,7 @@ dependences_script () {
       if ! command -v whiptail>/dev/null 2>&1 ; then yum -y install newt; fi
       if [ -z $(rpm -qa | grep yaml) ] ; then yum -y install python-yaml; fi
    fi
+   return 0
 }
 
 assurer_entres () {
@@ -129,27 +130,32 @@ recuperation () {
    fi
 }
 
+redemarrer_serv_perfsonar () {
+   systemctl restart perfsonar-meshconfig-agent
+   systemctl restart perfsonar-meshconfig-guiagent
+}
+
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
    sleep 1
-      ./maj_mesh-config.py "${FICHIER}"
-      sed -i "0,/#add_sonde/ s/#add_sonde//" mesh_tmp.conf
-      echo -e "\n+-----------------------------------------------------------------+\n"
-      echo -e "Nettoyage...\n"
-      echo -e "\n+-----------------------------------------------------------------+\n"
-      rm -f ./data.yaml
-      rm -f $path_SRV/mesh_central.json
-      backup_fichiers
-      rm -f $FICHIER
-      mv ./mesh_tmp.conf $FICHIER
-      if ! creation_json ; then
-         if ! recuperation ; then
-            die "Une erreur s'est produite pendant la récuperation de la configuration précedente." 1
-         fi
-         die "Erreur dans la création de la nouvelle config pour le fichier JSON." 1
+   ./maj_mesh-config.py "${FICHIER}"
+   sed -i "0,/#add_sonde/ s/#add_sonde//" mesh_tmp.conf
+   echo -e "\n+-----------------------------------------------------------------+\n"
+   echo -e "Nettoyage...\n"
+   echo -e "\n+-----------------------------------------------------------------+\n"
+   rm -f ./data.yaml
+   rm -f $path_SRV/mesh_central.json
+   backup_fichiers
+   rm -f $FICHIER
+   mv ./mesh_tmp.conf $FICHIER
+   if ! creation_json ; then
+      if ! recuperation ; then
+         die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $FICHIER.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayé." 1
       fi
-      rm -f $FICHIER.bak
-      return 0
+      die "Erreur dans la création de la nouvelle config pour le fichier JSON." 1
+   fi
+   rm -f $FICHIER.bak
+   return 0
    fi
    return 0
 }
@@ -173,12 +179,12 @@ done
 
 echo -e "\n\nScript pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
 
-if ! fichiers_script_presents ; then
-   die "Manque de fichiers nécessaires pour le script. Veuilliez vérifier qu'ils soient dans le répertoire courant. Fichiers: add_sonde.sh / maj_mesh-config.py / template.jinja2" 1
-fi
-
 if ! assurer_root ; then
    die "Vous devez être superutilisateur pour exécuter ce script" 1
+fi
+
+if ! fichiers_script_presents ; then
+   die "Manque de fichiers nécessaires pour le script. Veuilliez vérifier qu'ils soient dans le répertoire courant. Fichiers: add_sonde.sh / maj_mesh-config.py / template.jinja2" 1
 fi
 
 if ! assurer_entres ; then
