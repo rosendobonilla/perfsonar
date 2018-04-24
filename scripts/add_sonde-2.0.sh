@@ -106,6 +106,16 @@ backup_fichiers () {
    cp $FICHIER $FICHIER.bak
 }
 
+recuperation () {
+   mv $FICHIER.bak $FICHIER
+   if creation_json ; then
+      echo "Recupération de la config precédente réussite."
+      return 0
+   else
+      return 1
+   fi
+}
+
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
    sleep 2
@@ -123,7 +133,10 @@ appel_script_modif () {
       rm -f $FICHIER
       mv ./mesh_tmp.conf $FICHIER
       if ! creation_json ; then
-         die "Erreur dans la création de la nouvelle config pour le fichier JSON."
+         if ! recuperation ; then
+            die "Une erreur s'est produite pendant la récuperation de la configuration précedente." 1
+         fi
+         die "Erreur dans la création de la nouvelle config pour le fichier JSON." 1
       fi
       sleep 1
    fi
