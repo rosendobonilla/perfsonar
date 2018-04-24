@@ -44,6 +44,13 @@ assurer_entres () {
    return 1
 }
 
+fichiers_script_presents () {
+   if [ ! -f "./maj_mesh-config.py" ] || [ ! -f "./template.jinja2" ]; then
+      return 1
+   fi
+   return 0
+}
+
 verifier_ping_reponse () {
    if ping -c 1 $SERVER &> /dev/null ; then 
       return 0
@@ -122,16 +129,9 @@ recuperation () {
    fi
 }
 
-fichiers_script_presents () {
-   if [ ! -f "./maj_mesh-config.py" ] && [ ! -f "./template.jinja2" ]; then
-      return 1
-   else
-}
-
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
    sleep 1
-
       ./maj_mesh-config.py "${FICHIER}"
       sed -i "0,/#add_sonde/ s/#add_sonde//" mesh_tmp.conf
       echo -e "\n+-----------------------------------------------------------------+\n"
@@ -171,7 +171,11 @@ while getopts "s:f:" opts; do
   esac
 done
 
-echo -e "Script pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
+echo -e "\n\nScript pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
+
+if ! fichiers_script_presents ; then
+   die "Manque de fichiers nécessaires pour le script. Veuilliez vérifier qu'ils soient dans le répertoire courant. Fichiers: add_sonde.sh / maj_mesh-config.py / template.jinja2" 1
+fi
 
 if ! assurer_root ; then
    die "Vous devez être superutilisateur pour exécuter ce script" 1
@@ -181,6 +185,8 @@ if ! assurer_entres ; then
    aide
    die "Il manque des paramètres pour le script" 1
 fi
+
+dependences_script
 
 if ! verifier_ping_reponse ; then
    die "Le serveur n'est pas disponible. Veuilliez vérifier l'addresse ou ressayez plus tard." 1
@@ -199,5 +205,5 @@ if ! creation_data_yaml ; then
 fi
     
 if ! appel_script_modif ; then
-   die "Manque de fichiers nécessaires pour le script. Veuilliez vérifier qu'ils soient dans le répertoire courant." 1
+   die "Un erreur s'est produite pendant l'exécution de l'appel au script de modification du fichier JSON." 1
 fi
