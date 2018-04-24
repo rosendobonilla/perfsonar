@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-print "\n*******************************************************************\nExecution du script de mise à jour ..."
-print "\nCréation de la configuration de la nouvelle sonde : \n"
-
 import os
 from jinja2 import Environment, FileSystemLoader
 import yaml
 import sys
+
+print "\n*******************************************************************\nExecution du script de mise à jour ..."
+print "\nCréation de la configuration de la nouvelle sonde : \n"
 
 fich = sys.argv[1]
 
