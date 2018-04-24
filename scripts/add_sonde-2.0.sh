@@ -28,8 +28,11 @@ assurer_root () {
 dependences_script () {
    if [[ -e "/etc/debian_version" ]]; then
       echo "Systeme Debian"
+      if ! command -v whiptail>/dev/null 2>&1 ; then apt-get -y install whiptail; fi
    elif [[ -e "/etc/centos-release" ]]; then
       echo "Systeme CentOS"
+      if ! command -v whiptail>/dev/null 2>&1 ; then yum -y install newt; fi
+      yum -y install python-yaml
    fi
 }
 assurer_entres () {
@@ -103,11 +106,11 @@ creation_json () {
 }
 
 backup_fichiers () {
-   cp $FICHIER .$FICHIER.bak
+   cp $FICHIER $FICHIER.bak
 }
 
 recuperation () {
-   mv .$FICHIER.bak $FICHIER
+   mv $FICHIER.bak $FICHIER
    if creation_json ; then
       echo "Recupération de la config precédente réussite."
       return 0
