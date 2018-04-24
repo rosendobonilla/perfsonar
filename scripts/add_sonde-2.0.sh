@@ -71,7 +71,7 @@ verifier_ping_reponse () {
    return 1
 }
 
-#Vérifier la présence du fichier entré comme paramètre
+#Vérifier la présence du fichier entré en paramètre
 
 ver_fichier_conf () {
    if [ -f "$FICHIER" ]; then
@@ -207,7 +207,7 @@ appel_script_modif () {
    return 0
 }
 
-#Valider les arguments passés comme paramètres
+#Valider les arguments passés en paramètres
 
 while getopts "s:f:" opts; do
   case $opts in
