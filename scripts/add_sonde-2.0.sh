@@ -75,7 +75,7 @@ verifier_ping_reponse () {
 
 ver_fichier_conf () {
    if [ -f "$FICHIER" ]; then
-      echo -e "\n*******************************************************************\nFichier de conf MESH trouvé ..."
+      echo -e "\n+-----------------------------------------------------------------+\nFichier de conf MESH trouvé ..."
       return 0
    fi
    return 1
