@@ -28,6 +28,8 @@ for line in open(fich).readlines():
     if line.startswith("#add_sonde"):
         file.write(config)
         file.write("#add_sonde\n")
+    else:
+        print "\nLe fichier ne contient pas un delimiteur définit (#add_sonde). Pas possible de le traiter.\n"
 
 file.close
 

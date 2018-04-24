@@ -173,11 +173,11 @@ redemarrer_serv_perfsonar () {
 recuperer_logs () {
    clear
    echo -e "\n+-------------------------------------------------------------------------------------+\n"
-   echo -e "\n+----------------------DERNIERS LOGS MESHConfig AGENT---------------------------------+\n"
+   echo -e "+----------------------DERNIERS LOGS MESHConfig AGENT---------------------------------+"
    echo -e "\n+-------------------------------------------------------------------------------------+\n"
    tail -15 /var/log/perfsonar/meshconfig-agent.log
    echo -e "\n+-------------------------------------------------------------------------------------+\n"
-   echo -e "\n+----------------------DERNIERS LOGS MESHConfig GUIAGENT------------------------------+\n"
+   echo -e "+----------------------DERNIERS LOGS MESHConfig GUIAGENT------------------------------+"
    echo -e "\n+-------------------------------------------------------------------------------------+\n"
    tail -15 /var/log/perfsonar/meshconfig-guiagent.log
 }
@@ -199,9 +199,9 @@ appel_script_modif () {
    mv ./mesh_tmp.conf $FICHIER
    if ! creation_json ; then
       if ! recuperation ; then
-         die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $FICHIER.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayé." 1
+         die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $FICHIER.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
       fi
-      die "Erreur dans la création de la nouvelle config pour le fichier JSON." 1
+      die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
    fi
    rm -f $FICHIER.bak
    return 0
@@ -270,3 +270,5 @@ if ! redemarrer_serv_perfsonar ; then
 else
    recuperer_logs
 fi
+
+exit 0
