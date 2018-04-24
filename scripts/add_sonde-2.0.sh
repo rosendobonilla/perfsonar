@@ -12,6 +12,8 @@ aide () {
    echo ""
 }   
 
+#Message appellé avec chaque erreur
+
 die () {
    echo -e "\n+-----------------------------------------------------------------+\n"
    echo -e "Le script à echoué du à l'erreur suivante : \n$1\n"
@@ -19,12 +21,16 @@ die () {
    exit "$2"
 }
 
+#D'abord assurer que le script est lancé en tant que superutilisateur
+
 assurer_root () {
    if [ "$EUID" -ne "0" ] ; then
       return 1
    fi
    return 0
 }
+
+#Le script a besoin de certains paquets pour fonctionner correctement. C'est le cas de 'whiptail' et 'python-yaml'. Le premier sert à créer une interface graphique en terminal, utilisé pour demander les informations nécessaires pour la création de la nouvelle sonde. Le paquet 'python-yaml' est nécessaire pour pouvoir traiter des fichiers .yaml, les importer dans et avec un template jinja2 créer un nouveau fichier de configuration.
 
 dependences_script () {
    if [[ -e "/etc/debian_version" ]]; then
@@ -38,12 +44,16 @@ dependences_script () {
    return 0
 }
 
+#Il faut vérifier que le script a les paramètres requis
+
 assurer_entres () {
    if [ $optSRV == "1" ] && [ $optFICH == "1" ]; then
       return 0
    fi
    return 1
 }
+
+#Vérifier que tous les fichiers qui comportent le script sont dans les répertoire courant
 
 fichiers_script_presents () {
    if [ ! -f "./maj_mesh-config.py" ] || [ ! -f "./template.jinja2" ]; then
@@ -52,12 +62,16 @@ fichiers_script_presents () {
    return 0
 }
 
+#Vérifier que le serveur perfSONAR est joignable
+
 verifier_ping_reponse () {
    if ping -c 1 $SERVER &> /dev/null ; then 
       return 0
    fi
    return 1
 }
+
+#Vérifier la présence du fichier entré comme paramètre
 
 ver_fichier_conf () {
    if [ -f "$FICHIER" ]; then
@@ -66,6 +80,8 @@ ver_fichier_conf () {
    fi
    return 1
 }
+
+#Demander les informations concernant la sonde
 
 information () {
    descr=$(whiptail --inputbox "Entrez une description pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
@@ -88,7 +104,7 @@ information () {
       return 1
    fi
     
-   id=$(whiptail --inputbox "Entrez une identifient pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+   id=$(whiptail --inputbox "Entrez un identifient pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
                         
    exitstatus=$?
    if [ $exitstatus = 0 ]; then
@@ -100,6 +116,8 @@ information () {
    return 0
 }
 
+#Création du fichier data.yaml pour remplir le template
+
 creation_data_yaml () {
    echo "Etape creation du fichier data.yaml"
    echo "id: "$id"" >> ./data.yaml
@@ -107,6 +125,8 @@ creation_data_yaml () {
    echo "add: "$addr"" >> ./data.yaml
    return 0
 }
+
+#Création du nouveau fichier JSON
 
 creation_json () {
    /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json $FICHIER
@@ -116,9 +136,13 @@ creation_json () {
    return 0
 }
 
+#Sauvegarde du fichier de conf actuel pour le restaurer en cas d'echec 
+
 backup_fichiers () {
    cp $FICHIER $FICHIER.bak
 }
+
+#Essayez de revenir à l'état anterieur au lancement du script
 
 recuperation () {
    mv $FICHIER.bak $FICHIER
@@ -130,10 +154,14 @@ recuperation () {
    fi
 }
 
+#Rédemarrer les services perfSONAR nécessaires pour prendre en compte la nouvelle configuration
+
 redemarrer_serv_perfsonar () {
    systemctl restart perfsonar-meshconfig-agent
    systemctl restart perfsonar-meshconfig-guiagent
 }
+
+#Appel au script en Python qui fera tous les modifications dans les fichiers correspondants
 
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
@@ -160,6 +188,8 @@ appel_script_modif () {
    return 0
 }
 
+#Valider les arguments passés comme paramètres
+
 while getopts "s:f:" opts; do
   case $opts in
     s)
@@ -176,6 +206,8 @@ while getopts "s:f:" opts; do
       ;;
   esac
 done
+
+#Lancement de chaque étape en vérifiant les erreurs qui peuvent apparaitre
 
 echo -e "\n\nScript pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
 
