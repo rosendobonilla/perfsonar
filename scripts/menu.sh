@@ -7,3 +7,8 @@ choice=$(whiptail --title "Manage groups" --menu "Choisissez le groupe pour la n
 option=$(echo $choice | tr '[:upper:]' '[:lower:]' | sed 's/ //g')
 
 if [ $option == "interne" ]
+   #modifier mesh-conf groupe interne
+elif [ $option == "exterieur" ]
+   #modifier mesh-conf groupe exterieur
+fi
+   
