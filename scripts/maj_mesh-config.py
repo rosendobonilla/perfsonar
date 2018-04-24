@@ -27,8 +27,6 @@ for line in open(fich).readlines():
     file.write(line)
     if line.startswith("#add_sonde"):
         file.write(config)
-        #for line2 in temp.readlines():
-        #    file.write(line2)
         file.write("#add_sonde\n")
 
 file.close
