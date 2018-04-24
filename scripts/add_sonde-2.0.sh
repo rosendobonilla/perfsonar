@@ -103,11 +103,11 @@ creation_json () {
 }
 
 backup_fichiers () {
-   cp $FICHIER $FICHIER.bak
+   cp $FICHIER .$FICHIER.bak
 }
 
 recuperation () {
-   mv $FICHIER.bak $FICHIER
+   mv .$FICHIER.bak $FICHIER
    if creation_json ; then
       echo "Recupération de la config precédente réussite."
       return 0
