@@ -1,7 +1,7 @@
 #!/bin/bash
 
 optSRV="0" ; optFICH="0"
-path_SRV = "/var/www/html"
+path_SRV="/var/www/html"
 
 aide () { 
    echo ""
