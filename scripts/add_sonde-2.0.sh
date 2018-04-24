@@ -36,6 +36,7 @@ dependences_script () {
       if [ -z $(rpm -qa | grep yaml) ] ; then yum -y install python-yaml; fi
    fi
 }
+
 assurer_entres () {
    if [ $optSRV == "1" ] && [ $optFICH == "1" ]; then
       return 0
@@ -52,6 +53,7 @@ verifier_ping_reponse () {
 
 ver_fichier_conf () {
    if [ -f "$FICHIER" ]; then
+      echo -e "\n*******************************************************************\nFichier de conf MESH trouvé ..."
       return 0
    fi
    return 1
@@ -91,6 +93,7 @@ information () {
 }
 
 creation_data_yaml () {
+   echo "Etape creation du fichier data.yaml"
    echo "id: "$id"" >> ./data.yaml
    echo "desc: "$descr"" >> ./data.yaml
    echo "add: "$addr"" >> ./data.yaml
@@ -119,12 +122,16 @@ recuperation () {
    fi
 }
 
-appel_script_modif () {
-   echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
-   sleep 2
-   if [ ! -f "./maj_mesh-config.py" ]; then
+fichiers_script_presents () {
+   if [ ! -f "./maj_mesh-config.py" ] && [ ! -f "./template.jinja2" ]; then
       return 1
    else
+}
+
+appel_script_modif () {
+   echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
+   sleep 1
+
       ./maj_mesh-config.py "${FICHIER}"
       sed -i "0,/#add_sonde/ s/#add_sonde//" mesh_tmp.conf
       echo -e "\n+-----------------------------------------------------------------+\n"
@@ -181,9 +188,6 @@ fi
 
 if ! ver_fichier_conf ; then
    die "Le fichier spécifié n'a pas été trouvé dans le chemin indiqué." 1
-else
-   echo -e "\n*******************************************************************\nFichier de conf MESH trouvé ..."
-   sleep 2
 fi
 
 if ! information ; then
@@ -195,5 +199,5 @@ if ! creation_data_yaml ; then
 fi
     
 if ! appel_script_modif ; then
-   die "Le script de modification maj_mesh-config.py n'existe pas dans le répertoire actuel." 1
+   die "Manque de fichiers nécessaires pour le script. Veuilliez vérifier qu'ils soient dans le répertoire courant." 1
 fi
