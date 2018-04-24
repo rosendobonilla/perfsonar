@@ -1,6 +1,7 @@
 #!/bin/bash
 
 optSRV="0" ; optFICH="0"
+path_SRV = "/var/www/html"
 
 aide () { 
    echo ""
@@ -32,7 +33,7 @@ dependences_script () {
    elif [[ -e "/etc/centos-release" ]]; then
       echo "Systeme CentOS"
       if ! command -v whiptail>/dev/null 2>&1 ; then yum -y install newt; fi
-      yum -y install python-yaml
+      if [ -z $(rpm -qa | grep yaml) ] ; then yum -y install python-yaml; fi
    fi
 }
 assurer_entres () {
@@ -97,7 +98,6 @@ creation_data_yaml () {
 }
 
 creation_json () {
-   path_SRV = "/var/www/html"
    /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json $FICHIER
    if [ $? != "0" ] ; then
       return 1
