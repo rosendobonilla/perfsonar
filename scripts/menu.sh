@@ -6,4 +6,4 @@ choice=$(whiptail --title "Manage groups" --menu "Choisissez le groupe pour la n
          
 option=$(echo $choice | tr '[:upper:]' '[:lower:]' | sed 's/ //g')
 
-echo $option
+if [ $option == "interne" ]
