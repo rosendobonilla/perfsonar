@@ -16,7 +16,7 @@ aide () {
 
 die () {
    echo -e "\n+-----------------------------------------------------------------+\n"
-   echo -e "Le script à echoué du à l'erreur suivante : \n$1\n"
+   echo -e "Le script à echoué à cause de l'erreur suivante : \n$1\n"
    echo -e "\n+-----------------------------------------------------------------+\n"
    exit "$2"
 }
