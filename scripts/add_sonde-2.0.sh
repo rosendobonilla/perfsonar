@@ -12,7 +12,7 @@ aide () {
    echo ""
 }   
 
-#Message appelé avec chaque erreur
+#Message appelé lors de chaque erreur
 
 die () {
    echo -e "\n+-----------------------------------------------------------------+\n"
