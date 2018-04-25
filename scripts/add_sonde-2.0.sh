@@ -168,7 +168,7 @@ redemarrer_serv_perfsonar () {
    return 0
 }
 
-#Affichage des derniers logs pour vérifier si tous s'est bien passé
+#Affichage des derniers logs pour vérifier si tout s'est bien passé
 
 recuperer_logs () {
    clear
@@ -240,7 +240,7 @@ fi
 
 if ! assurer_entres ; then
    aide
-   die "Il manque des paramètres pour le script" 1
+   die "Manque des paramètres pour le script" 1
 else
    dependences_script
 fi
