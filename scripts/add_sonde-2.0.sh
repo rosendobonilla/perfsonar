@@ -181,7 +181,7 @@ recuperer_logs () {
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $REP ..."
    sleep 1
-   ./maj_mesh-config.py "${REP}"
+   ./maj_mesh-config.py "${REP}" "${id}"
    sed -i "0,/#add_sonde/ s/#add_sonde//" mesh_tmp.conf
    echo -e "\n+-----------------------------------------------------------------+\n"
    echo -e "Nettoyage...\n"
