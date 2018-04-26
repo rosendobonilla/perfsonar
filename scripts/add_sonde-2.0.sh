@@ -7,7 +7,7 @@ aide () {
    echo ""
    echo "Usage : $0 -u <répertoire>" 1>&2; 
    echo ""
-   echo "-s : Le chemin vers le répertoire où trouver toute la configuration du MESH"
+   echo "-u : Le chemin vers le répertoire où trouver toute la configuration du MESH"
    echo ""
 }   
 
@@ -58,13 +58,17 @@ fichiers_script_presents () {
    if [ ! -f "./maj_mesh-config.py" ] || [ ! -f "./template.jinja2" ]; then
       return 1
    fi
+   if [ ! -d "$REP/sites" ] || [ ! -d "$REP/tests" ] || [ ! -d "$REP/organisations" ] || [ ! -d "$REP/groupes" ]; then
+      return 1
+   fi
    return 0
 }
+
 
 #Vérifier la présence du fichier entré en paramètre
 
 ver_fichier_conf () {
-   if [ -f "$FICHIER" ]; then
+   if [ -f "$REP" ]; then
       echo -e "\n+-----------------------------------------------------------------+\nFichier de conf MESH trouvé ..."
       return 0
    fi
@@ -119,7 +123,7 @@ creation_data_yaml () {
 #Création du nouveau fichier JSON
 
 creation_json () {
-   /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json $FICHIER
+   /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json $REP
    if [ $? != "0" ] ; then
       return 1
    fi
@@ -129,13 +133,13 @@ creation_json () {
 #Sauvegarde du fichier de conf actuel pour le restaurer en cas d'echec 
 
 backup_fichiers () {
-   cp $FICHIER $FICHIER.bak
+   cp $REP $REP.bak
 }
 
 #Essayez de revenir à l'état anterieur au lancement du script
 
 recuperation () {
-   mv $FICHIER.bak $FICHIER
+   mv $REP.bak $REP
    if creation_json ; then
       echo "Recupération de la config precédente réussite."
       return 0
@@ -175,9 +179,9 @@ recuperer_logs () {
 #Appel au script en Python qui fera toutes les modifications dans les fichiers correspondants
 
 appel_script_modif () {
-   echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
+   echo -e "\nAppel au script de modification du fichier mesh config : $REP ..."
    sleep 1
-   ./maj_mesh-config.py "${FICHIER}"
+   ./maj_mesh-config.py "${REP}"
    sed -i "0,/#add_sonde/ s/#add_sonde//" mesh_tmp.conf
    echo -e "\n+-----------------------------------------------------------------+\n"
    echo -e "Nettoyage...\n"
@@ -185,15 +189,15 @@ appel_script_modif () {
    rm -f ./data.yaml
    rm -f $path_SRV/mesh_central.json
    backup_fichiers
-   rm -f $FICHIER
-   mv ./mesh_tmp.conf $FICHIER
+   rm -f $REP
+   mv ./mesh_tmp.conf $REP
    if ! creation_json ; then
       if ! recuperation ; then
-         die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $FICHIER.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
+         die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $REP.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
       fi
       die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
    fi
-   rm -f $FICHIER.bak
+   rm -f $REP.bak
    return 0
 }
 
@@ -207,7 +211,7 @@ while getopts "s:f:" opts; do
       ;;
     f)
       optFICH="1"
-      FICHIER=${OPTARG}
+      REP=${OPTARG}
       ;;
     \?)
       aide
