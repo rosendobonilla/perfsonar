@@ -5,10 +5,9 @@ path_SRV="/var/www/html"
 
 aide () { 
    echo ""
-   echo "Usage : $0 -s <address> -f <fichier.JSON>" 1>&2; 
+   echo "Usage : $0 -u <répertoire>" 1>&2; 
    echo ""
-   echo "-s : L'addresse du serveur perfSONAR. IP ou hostname."
-   echo "-f : Chemin du fichier mesh-config"
+   echo "-s : Le chemin vers le répertoire où trouver toute la configuration du MESH"
    echo ""
 }   
 
@@ -60,15 +59,6 @@ fichiers_script_presents () {
       return 1
    fi
    return 0
-}
-
-#Vérifier que le serveur perfSONAR est joignable
-
-verifier_ping_reponse () {
-   if ping -c 1 $SERVER &> /dev/null ; then 
-      return 0
-   fi
-   return 1
 }
 
 #Vérifier la présence du fichier entré en paramètre
@@ -243,10 +233,6 @@ if ! assurer_entres ; then
    die "Manque des paramètres pour le script" 1
 else
    dependences_script
-fi
-
-if ! verifier_ping_reponse ; then
-   die "Le serveur n'est pas disponible. Veuilliez vérifier l'addresse ou ressayez plus tard." 1
 fi
 
 if ! ver_fichier_conf ; then
