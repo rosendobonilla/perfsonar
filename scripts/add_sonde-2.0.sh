@@ -182,7 +182,7 @@ recuperer_logs () {
    tail -15 /var/log/perfsonar/meshconfig-guiagent.log
 }
 
-#Appel au script en Python qui fera tous les modifications dans les fichiers correspondants
+#Appel au script en Python qui fera toutes les modifications dans les fichiers correspondants
 
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $FICHIER ..."
