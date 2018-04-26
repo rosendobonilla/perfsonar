@@ -251,10 +251,10 @@ if ! appel_script_modif ; then
    die "Un erreur s'est produite pendant l'exécution de l'appel au script de modification du fichier JSON." 1
 fi
 
-if ! redemarrer_serv_perfsonar ; then
-   die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
-else
-   recuperer_logs
-fi
+#if ! redemarrer_serv_perfsonar ; then
+#   die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
+#else
+#   recuperer_logs
+#fi
 
 exit 0
