@@ -2,7 +2,7 @@
 
 #----------------------------------------------------------------------------------------
 # Script permettant de demander les informations pour la création de la nouvelle sonde
-# et d'appeler à les scripts Python
+# et d'appeler aux scripts Python
 #----------------------------------------------------------------------------------------
 
 optREP="0" 
