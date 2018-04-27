@@ -302,7 +302,7 @@ description PerfSONAR Observatoire Mesh Config
 
 
 #Groupe Observatoire - Exterieur / Dans ce cas, le Bat Sud (Sonde centrale) utilise l'addresse publique
-<group OAS_bwctl_group_disjoint>
+<group obas_group_exterieur>
    type disjoint
     
    #center_address   address publique
@@ -313,7 +313,7 @@ description PerfSONAR Observatoire Mesh Config
 </group>
 
 #Groupe Observatoire - Réseau interne / Dans ce cas, le Bat Sud (Sonde centrale) utilise l'addresse privée
-<group OAS_group_general>
+<group obas_group_interne>
     type       mesh
 
     member     ops.u-strasbg.fr
@@ -333,49 +333,49 @@ description PerfSONAR Observatoire Mesh Config
 
 <test>
   description       Throughput Testing TCP Observatoire
-  group             OAS_group_general
+  group             obas_group_interne
   test_spec         bwctl_test_tcp
 </test>
 
 <test>
   description       Throughput Testing UDP Observatoire
-  group             OAS_group_general
+  group             obas_group_interne
   test_spec         bwctl_test_udp
 </test>
 
 <test>
   description       OWAMP Testing
-  group             OAS_group_general
+  group             obas_group_interne
   test_spec         owamp_test
 </test>
 
 <test>
   description       Ping Testing
-  group             OAS_group_general
+  group             obas_group_interne
   test_spec         ping_test
 </test>
 
 <test>
   description       Traceroute Testing
-  group             OAS_group_general
+  group             obas_group_interne
   test_spec         traceroute_test
 </test>
 
 #Tests à faire vers l'exterieur
 <test>
   description       Throughput Testing TCP Exterieur
-  group             OAS_bwctl_group_disjoint
+  group             obas_group_exterieur
   test_spec         bwctl_test_out_tcp
 </test>
 
 <test>
   description       Throughput Testing UDP Exterieur
-  group             OAS_bwctl_group_disjoint
+  group             obas_group_exterieur
   test_spec         bwctl_test_out_udp
 </test>
 
 <test>
   description       Ping Testing Exterieur
-  group             OAS_bwctl_group_disjoint
+  group             obas_group_exterieur
   test_spec         ping_test
 </test>
