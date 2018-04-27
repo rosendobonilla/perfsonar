@@ -34,7 +34,6 @@ for fich in liste:
 file.write("</organization>\n\n")        
 
 for line in open("../conf/body.cfg").readlines():
-    print line
     file.write(line)
 
 print "\n+-----------------------------------------------------------------+\nConfiguration complète"
