@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#----------------------------------------------------------------------------------------
+# Script permettant de créer la configuration de la nouvelle sonde à partir du template
+# data.yaml et le placer dans le répertoire de tous les sites
+#----------------------------------------------------------------------------------------
+
 import os
 from jinja2 import Environment, FileSystemLoader
 import yaml

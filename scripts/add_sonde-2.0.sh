@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#----------------------------------------------------------------------------------------
+# Script permettant de demander les informations pour la création de la nouvelle sonde
+# et d'appeler à les scripts Python
+#----------------------------------------------------------------------------------------
+
 optREP="0" 
 path_SRV="/var/www/html"
 jour=$(date + "%d-%m-%Y")

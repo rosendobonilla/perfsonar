@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#----------------------------------------------------------------------------------------
+# Script permettant de créer toute une nouvelle configuration Mesh
+# à partir des sites déjà crées
+#----------------------------------------------------------------------------------------
+
 import os
 from jinja2 import Environment, FileSystemLoader
 import yaml
