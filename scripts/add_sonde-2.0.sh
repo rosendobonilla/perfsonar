@@ -2,6 +2,8 @@
 
 optSRV="0" ; optFICH="0"
 path_SRV="/var/www/html"
+jour=$(date +"%d/%m/%Y")
+nomBack="mesh-config-"$jour".bak" 
 
 aide () { 
    echo ""
@@ -58,7 +60,7 @@ fichiers_script_presents () {
    if [ ! -f "./maj_mesh-config.py" ] || [ ! -f "./template.jinja2" ]; then
       return 1
    fi
-   if [ ! -d "$REP/sites" ] || [ ! -d "$REP/tests" ] || [ ! -d "$REP/organisations" ] || [ ! -d "$REP/groupes" ]; then
+   if [ ! -d "$REP/sites" ] || [ ! -d "$REP/backup" ] || [ ! -f "$REP/meshconfig.conf" ] ; then
       return 1
    fi
    return 0
@@ -123,7 +125,7 @@ creation_data_yaml () {
 #Création du nouveau fichier JSON
 
 creation_json () {
-   /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json $REP
+   /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json "$REP/meshconfig.conf"
    if [ $? != "0" ] ; then
       return 1
    fi
@@ -133,13 +135,14 @@ creation_json () {
 #Sauvegarde du fichier de conf actuel pour le restaurer en cas d'echec 
 
 backup_fichiers () {
-   cp $REP $REP.bak
+   cp $REP $REP/backup/$nomBack
 }
 
 #Essayez de revenir à l'état anterieur au lancement du script
 
 recuperation () {
-   mv $REP.bak $REP
+   rm -f "$REP/meshconfig.conf"
+   cp "$REP/backup/$nomback" "$REP/meshconfig.conf"
    if creation_json ; then
       echo "Recupération de la config precédente réussite."
       return 0
@@ -182,22 +185,20 @@ appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $REP ..."
    sleep 1
    ./maj_mesh-config.py "${REP}" "${id}"
-   sed -i "0,/#add_sonde/ s/#add_sonde//" mesh_tmp.conf
    echo -e "\n+-----------------------------------------------------------------+\n"
    echo -e "Nettoyage...\n"
    echo -e "\n+-----------------------------------------------------------------+\n"
    rm -f ./data.yaml
    rm -f $path_SRV/mesh_central.json
    backup_fichiers
-   rm -f $REP
-   mv ./mesh_tmp.conf $REP
+   rm -f "$REP/meshconfig.conf"
+   mv ./mesh_tmp.conf "$REP/meshconfig.conf"
    if ! creation_json ; then
       if ! recuperation ; then
          die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $REP.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
       fi
       die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
    fi
-   rm -f $REP.bak
    return 0
 }
 
