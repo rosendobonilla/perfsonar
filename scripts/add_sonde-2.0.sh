@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #----------------------------------------------------------------------------------------
-# Script permettant de demander les informations pour la création de la nouvelle sonde
-# et d'appeler aux scripts Python
+# Script permettant de demander les informations pour la création de la nouvelle sonde,
+# valider les erreurs et d'appeler aux scripts Python
 #----------------------------------------------------------------------------------------
 
 optREP="0" 
