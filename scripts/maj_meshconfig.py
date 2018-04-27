@@ -5,13 +5,11 @@ import os
 from jinja2 import Environment, FileSystemLoader
 import yaml
 import sys
-import creation_mesh
+
 
 rep = sys.argv[1]
-idSonde = sys.argv[2]0
-nomFich = rep + "/sites/" idSonde + ".cfg"
-
-os.system('./creation_mesh.py' rep )
+idSonde = sys.argv[2]
+nomFich = rep + "/sites/" + idSonde + ".cfg"
 
 config_data = yaml.load(open('./data.yaml'))
 
@@ -20,8 +18,5 @@ template = env.get_template('template.jinja2')
 
 config = template.render(config_data)
 
-file = open(nomFich,"wb") 
+file = open(nomFich,"wr") 
 file.write(config)
-file.close
-
-

@@ -7,8 +7,9 @@ import yaml
 import sys
 import glob
 
-rep = "./"
-idSonde = "obas"
+reper = sys.argv[1]
+nomFich = reper + "/meshconfig.conf"
+print nomFich
 
 ##print "\n+-----------------------------------------------------------------+\nExecution du script de mise à jour ..."
 print "\nCréation de la configuration de la nouvelle sonde : \n"
@@ -18,25 +19,23 @@ entete = """description PerfSONAR Observatoire Mesh Config
 <organization>
     description     Observatoire Astronomique de Strasbourg
 
-</organization>
-
 """
-
-nomFich = rep + idSonde
 
 file = open(nomFich,"wb") 
 
 file.write(entete)
 
-listing = glob.glob('*.cfg')
-for filename in listing:
-    for line in open(filename).readlines():
+liste = glob.glob(reper + '/sites/*.cfg')
+
+for fich in liste:
+    for line in open(fich).readlines():
         file.write(line)
-        
-for line in open("./body").readlines():
+
+file.write("</organization>\n\n")        
+
+for line in open("../conf/body.cfg").readlines():
     print line
     file.write(line)
-        
 
 print "\n+-----------------------------------------------------------------+\nConfiguration complète"
 
