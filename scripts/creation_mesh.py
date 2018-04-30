@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#----------------------------------------------------------------------------------------------#
+# Ce script permet de créer la configuration finale meshconfig.conf, avec tous les bloques   #
+# nécessaires (organisations, sites, tests, groupes, etc). Il va parcourir tout l'arborescence #
+# du MESH pour retrouver les données requises                                                  #   
+#----------------------------------------------------------------------------------------------#
+
 import os
 from jinja2 import Environment, FileSystemLoader
 import yaml

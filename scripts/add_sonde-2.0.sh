@@ -194,6 +194,8 @@ recuperer_logs () {
 
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $REP ..."
+
+   #Cette partie permet  d'envoyer les paramètres selon le type de groupe, le groupe disjoint nécessite d'un paramètre en plus
    if [[ $TYPE == "disjoint" ]] ; then
       ./maj_meshconfig.py "${REP}" "${addr}" "${TYPE}" "${MEMBRE}"
    else
@@ -217,7 +219,7 @@ appel_script_modif () {
    return 0
 }
 
-#Valider les arguments passés en paramètres
+#Valider les arguments passés en paramètre
 
 while getopts "u:" opts; do
   case $opts in
