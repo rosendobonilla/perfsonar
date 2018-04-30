@@ -1,15 +1,6 @@
 #!/bin/bash
 
-#----------------------------------------------------------------------------------------
-# Script permettant de demander les informations pour la création de la nouvelle sonde,
-# valider les erreurs et d'appeler aux scripts Python
-#----------------------------------------------------------------------------------------
-
-optREP="0" 
-path_SRV="/var/www/html"
-jour=$(date + "%d-%m-%Y")
-heure=$(date + "%H:%M")
-nomBack="mesh-config-$jour_$heure.bak" 
+optREP="0" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE=""  
 
 aide () { 
    echo ""
@@ -104,17 +95,32 @@ information () {
    else
       echo "Installation interrompue."
       return 1
-   fi
-    
-   id=$(whiptail --inputbox "Entrez un identifient pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
-                        
-   exitstatus=$?
-   if [ $exitstatus = 0 ]; then
-      echo "Identifient établie."
-   else
-      echo "Installation interrompue."
-      return 1
-   fi
+   fi    
+   
+   groupe=$(whiptail --title "Manage groups" --menu "Choisissez le groupe pour la nouvelle sonde" 16 78 5 \
+        "Interne" "Groupe sondes internes ObAS"\
+        "Exterieur" "Groupe sondes publiques" 3>&2 2>&1 1>&3)
+
+   opt=$(echo $groupe | tr '[:upper:]' '[:lower:]')
+
+
+   if [[ $opt == "interne" ]] ; then
+      TYPE="mesh"
+   elif [[ $opt == "exterieur" ]] ; then
+      TYPE="disjoint"
+
+      tipo=$(whiptail --title "Manage groups" --menu "Choisissez le type de membre. Par défaut TYPE B" 16 78 5 \
+              "Member A" "Membre sur l'observatoire"\
+              "Member B" "Membre à l'exterieur" 3>&2 2>&1 1>&3)
+
+      opt2=$(echo $tipo | tr '[:upper:]' '[:lower:]' | sed 's/ //g')
+      if [[ $opt2 == "membera" ]] ; then
+         MEMBRE="a_member"
+      elif [[ $opt2 == "memberb" ]] ; then
+         MEMBRE="b_member"
+ 	 echo $MEMBRE
+      fi
+   fi  
    return 0
 }
 
@@ -184,12 +190,15 @@ recuperer_logs () {
    tail -15 /var/log/perfsonar/meshconfig-guiagent.log
 }
 
-#Appel au script en Python qui fera toutes les modifications dans les fichiers correspondants
+#Appel aux scripts en Python qui feront toutes les modifications dans les fichiers correspondants
 
 appel_script_modif () {
    echo -e "\nAppel au script de modification du fichier mesh config : $REP ..."
-   sleep 1
-   ./maj_meshconfig.py "${REP}" "${id}"
+   if [[ $TYPE == "disjoint" ]] ; then
+      ./maj_meshconfig.py "${REP}" "${addr}" "${TYPE}" "${MEMBRE}"
+   else
+      ./maj_meshconfig.py "${REP}" "${addr}" "${TYPE}"
+   fi
    echo -e "\n+-----------------------------------------------------------------+\n"
    echo -e "Nettoyage...\n"
    echo -e "\n+-----------------------------------------------------------------+\n"

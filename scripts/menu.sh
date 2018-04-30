@@ -1,14 +1,25 @@
 #!/bin/bash
 
-choice=$(whiptail --title "Manage groups" --menu "Choisissez le groupe pour la nouvelle sonde" 16 78 5 \
+groupe=$(whiptail --title "Manage groups" --menu "Choisissez le groupe pour la nouvelle sonde" 16 78 5 \
         "Interne" "Groupe sondes internes ObAS"\
-        "Exterieur" "Groupe sondes à l'exterieur" 3>&2 2>&1 1>&3) 
+        "Exterieur" "Groupe sondes publiques" 3>&2 2>&1 1>&3) 
          
-option=$(echo $choice | tr '[:upper:]' '[:lower:]' | sed 's/ //g')
+opt=$(echo $groupe | tr '[:upper:]' '[:lower:]')
 
-if [ $option == "interne" ]
-   #modifier mesh-conf groupe interne
-elif [ $option == "exterieur" ]
-   #modifier mesh-conf groupe exterieur
+
+if [[ $opt == "interne" ]] ; then
+   TYPE="mesh"
+elif [[ $opt == "exterieur" ]] ; then
+   TYPE="disjoint"
 fi
-   
+
+
+if [[ $TYPE == "disjoint" ]] ; then
+   tipo=$(whiptail --title "Manage groups" --menu "Choisissez le type de membre. Par défaut TYPE B" 16 78 5 \
+        "Membre A" "Membre sur l'observatoire"\
+        "Membre B" "Membre à l'exterieur" 3>&2 2>&1 1>&3) 
+fi
+
+opt2=$(echo $tipo | tr '[:upper:]' '[:lower:]')
+
+echo "Vous avez choisi $opt et $opt2"
