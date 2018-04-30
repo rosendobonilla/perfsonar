@@ -57,7 +57,7 @@ fichiers_script_presents () {
    if [ ! -f "./maj_meshconfig.py" ] || [ ! -f "./template.jinja2" ]; then
       return 1
    fi
-   if [ ! -d "$REP/sites" ] || [ ! -d "$REP/backup" ] || [ ! -f "$REP/meshconfig.conf" ] ; then
+   if [ ! -d "$REP/sites" ] || [ ! -d "$REP/backup" ] || [ ! -d "$REP/groupes" ] || [ ! -f "$REP/meshconfig.conf" ]  ; then
       return 1
    fi
    return 0
@@ -248,7 +248,8 @@ else
 fi
 
 if ! fichiers_script_presents ; then
-   die "Manque de fichiers nécessaires pour le script. Veuilliez vérifier qu'ils sont dans le répertoire courant. Fichiers: add_sonde.sh / maj_mesh-config.py / template.jinja2" 1
+   die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant. \nFichiers script (repertoire courant) : add_sonde.sh | maj_mesh-config.py | template.jinja2 | creation_mesh.py \
+        \nFichiers et repertoires MESH nécessaires (repertoire que vous avez définit) : REP groupes, sites et backup | FICH meshconfig.conf" 1
 fi
 
 if ! ver_fichier_conf ; then

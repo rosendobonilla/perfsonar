@@ -28,6 +28,7 @@ file.write(entete)
 
 sites = glob.glob(reper + '/sites/*.cfg')
 types = [os.path.basename(x) for x in glob.glob(reper + "/groupes/disjoint/*")]
+types.sort()
 
 for fich in sites:
     for line in open(fich).readlines():
@@ -37,10 +38,10 @@ for fich in sites:
 file.write("</organization>\n\n")        
 
 file.write("<group obas_interne_mesh>\n")
-file.write("   type mesh\n\n")
+file.write("   type mesh\n")
 for mem in glob.glob(reper + "/groupes/mesh/*"):
     dirname, filename = os.path.split(mem) 
-    file.write("   member " + filename)
+    file.write("\n   member " + filename)
 file.write("\n</group>")
 
 file.write("\n\n<group obas_exterieur_disjoint>\n")
@@ -50,8 +51,9 @@ for tipo in types:
     for mem in glob.glob(reper + "/groupes/disjoint/" + tipo + "/*"):
         dirname, filename = os.path.split(mem) 
         file.write("   " + tipo + " " + filename + "\n")
+    file.write("\n")
 
-file.write("\n</group>\n\n")
+file.write("</group>\n\n")
 
 for line in open("../conf/body.cfg").readlines():
     file.write(line)
