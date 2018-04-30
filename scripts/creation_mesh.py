@@ -13,10 +13,10 @@ import yaml
 import sys
 import glob
 
+#On récupère le chemin du répertoire MESH grace au script BASH
+
 reper = sys.argv[1]
 nomFich = reper + "/meshconfig.conf"
-
-
 
 ##print "\n+-----------------------------------------------------------------+\nExecution du script de mise à jour ..."
 print "\nCréation de la configuration de la nouvelle sonde : \n"
@@ -28,16 +28,19 @@ entete = """description PerfSONAR Observatoire Mesh Config
 
 """
 
-file = open(nomFich,"wb") 
+file = open(nomFich,"wb")                                                            #On crée le nouveau fichier de configuration
 
+#L'entete va etre toujours la meme, on le met donc en brute dans le fichier
 file.write(entete)
 
-sites = glob.glob(reper + '/sites/*.cfg')
-types = [os.path.basename(x) for x in glob.glob(reper + "/groupes/disjoint/*")]
-types.sort()
 
+sites = glob.glob(reper + '/sites/*.cfg')                                            #Le script parcours le répertoire /sites en cherchant de fichiers .cfg et met leurs noms dans un tableau
+types = [os.path.basename(x) for x in glob.glob(reper + "/groupes/disjoint/*")]      #Cas particulier pour le groupe 'disjoint' ; d'abord on obtient les types (a ou b)
+types.sort()                                                                         #Trier le tableau pour avoir en premier lieu les members 'a'
+
+#On parcours le tableau
 for fich in sites:
-    for line in open(fich).readlines():
+    for line in open(fich).readlines():                                              #On lit chaque fichier et écrit dans le fichier
         file.write(line)
 
 
