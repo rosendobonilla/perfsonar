@@ -43,7 +43,7 @@ for fich in sites:
     for line in open(fich).readlines():                                              #On lit chaque fichier et écrit dans le fichier
         file.write(line)
 
-
+#On écrit le final du bloque
 file.write("</organization>\n\n")        
 
 file.write("<group obas_interne_mesh>\n")
