@@ -43,7 +43,6 @@ for fich in sites:
         file.write(line)
 
 #On ferme le bloque
-
 file.write("</organization>\n\n")        
 
 #On commence la partie des groupes

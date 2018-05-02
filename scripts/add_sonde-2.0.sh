@@ -48,6 +48,7 @@ assurer_entres () {
    if [ $optREP == "1" ] ; then
       return 0
    fi
+
    return 1
 }
 
@@ -60,6 +61,7 @@ fichiers_script_presents () {
    if [ ! -d "$REP/sites" ] || [ ! -d "$REP/backup" ] || [ ! -d "$REP/groupes" ] || [ ! -f "$REP/meshconfig.conf" ]  ; then
       return 1
    fi
+
    return 0
 }
 
@@ -223,7 +225,7 @@ while getopts "u:" opts; do
   case $opts in
     u)
       optREP="1"
-      REP=${OPTARG}
+      REP=$(echo ${OPTARG} | sed -e 's/\/$//')
       ;;
     \?)
       aide
@@ -247,10 +249,12 @@ else
    dependences_script
 fi
 
+
 if ! fichiers_script_presents ; then
    die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant. \nFichiers script (repertoire courant) : add_sonde.sh | maj_mesh-config.py | template.jinja2 | creation_mesh.py \
         \nFichiers et repertoires MESH nécessaires (repertoire que vous avez définit) : REP groupes, sites et backup | FICH meshconfig.conf" 1
 fi
+
 
 if ! ver_fichier_conf ; then
    die "Aucun fichier de configuration MESH n'a pas été trouvé dans le chemin indiqué." 1
