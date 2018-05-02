@@ -207,9 +207,7 @@ appel_script_modif () {
    rm -f ./data.yaml
    #rm -f $path_SRV/mesh_central.json
    backup_fichiers
-   #rm -f "$REP/meshconfig.conf" 
    ./creation_mesh.py "${REP}"
-   #mv ./mesh_tmp.conf "$REP/meshconfig.conf"
    #if ! creation_json ; then
    #   if ! recuperation ; then
    #      die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $REP.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
