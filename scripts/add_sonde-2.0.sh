@@ -11,7 +11,7 @@ aide()
     echo ""
     echo "${bold}Usage${normal}    : $0 ${italic}--action=[list,add,delete] --dir=[répertoire]" 1>&2
     echo ""
-    echo "${bold}--action${normal} : spécifie quelle type de tache on veut faire."
+    echo "${normal}${bold}--action${normal} : spécifie quelle type de tache on veut faire."
     echo ""
     echo "    ${under}list${normal} : affiche la liste des sondes créees"
     echo "     ${under}add${normal} : permet d'ajouter une nouvelle sonde"
