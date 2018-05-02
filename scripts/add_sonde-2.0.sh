@@ -239,18 +239,6 @@ tache_list () {
 
 #Valider les arguments passés en paramètre
 
-# while getopts "u:" opts; do
-#   case $opts in
-#     u)
-#       optREP="1"
-#       REP=$(echo ${OPTARG} | sed -e 's/\/$//')
-#       ;;
-#     \?)
-#       aide
-#       exit 1
-#       ;;
-#   esac
-# done
 while [ "$1" != "" ]; do
     PARAM=`echo $1 | awk -F= '{print $1}'`
     VALUE=`echo $1 | awk -F= '{print $2}'`
