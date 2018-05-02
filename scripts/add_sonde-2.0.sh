@@ -5,7 +5,7 @@ ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure
 aide()
 {
     echo ""
-    echo "Usage : $0 --action=[list,add,delete] --dir=[répertoire]" 1>&2
+    echo "Usage    : $0 --action=[list,add,delete] --dir=[répertoire]" 1>&2
     echo ""
     echo "--action : spécifie quelle type de tache on veut faire."
     echo ""
@@ -14,6 +14,8 @@ aide()
     echo "  delete : permet de supprimer une sonde"
     echo ""
     echo "--dir    : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
+    echo ""
+    echo ""
 }
 
 #Message appelé lors de chaque erreur
