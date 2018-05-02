@@ -1,14 +1,20 @@
 #!/bin/bash
 
-optREP="0" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE=""  
+ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE=""
 
-aide () { 
-   echo ""
-   echo "Usage : $0 -u <répertoire>" 1>&2; 
-   echo ""
-   echo "-u : Le chemin vers le répertoire où trouver toute la configuration du MESH"
-   echo ""
-}   
+aide()
+{
+    echo ""
+    echo "Usage : $0 --action=[list,add,delete] --dir=[répertoire]" 1>&2
+    echo ""
+    echo "--action : spécifie quelle type de tache on veut faire."
+    echo ""
+    echo "    list : affiche la liste des sondes créees"
+    echo "     add : permet d'ajouter une nouvelle sonde"
+    echo "  delete : permet de supprimer une sonde"
+    echo ""
+    echo "--dir    : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
+}
 
 #Message appelé lors de chaque erreur
 
@@ -32,10 +38,8 @@ assurer_root () {
 
 dependences_script () {
    if [[ -e "/etc/debian_version" ]]; then
-      echo "Systeme Debian"
       if ! command -v whiptail>/dev/null 2>&1 ; then apt-get -y install whiptail; fi
    elif [[ -e "/etc/centos-release" ]]; then
-      echo "Systeme CentOS"
       if ! command -v whiptail>/dev/null 2>&1 ; then yum -y install newt; fi
       if [ -z $(rpm -qa | grep yaml) ] ; then yum -y install python-yaml; fi
    fi
@@ -45,11 +49,11 @@ dependences_script () {
 #Il faut vérifier que le script a les paramètres requis
 
 assurer_entres () {
-   if [ $optREP == "1" ] ; then
-      return 0
+   if [[ $ACTION == "" ]] || [[ $DIR == "" ]] ; then
+      return 1
    fi
 
-   return 1
+   return 0
 }
 
 #Vérifier que tous les fichiers qui comportent le script sont dans les répertoire courant
@@ -58,7 +62,7 @@ fichiers_script_presents () {
    if [ ! -f "./maj_meshconfig.py" ] || [ ! -f "./template.jinja2" ]; then
       return 1
    fi
-   if [ ! -d "$REP/sites" ] || [ ! -d "$REP/backup" ] || [ ! -d "$REP/groupes" ] || [ ! -f "$REP/meshconfig.conf" ]  ; then
+   if [ ! -d "$DIR/sites" ] || [ ! -d "$DIR/backup" ] || [ ! -d "$DIR/groupes" ] || [ ! -f "$DIR/meshconfig.conf" ]  ; then
       return 1
    fi
 
@@ -69,8 +73,7 @@ fichiers_script_presents () {
 #Vérifier la présence du fichier entré en paramètre
 
 ver_fichier_conf () {
-   if [ -f "$REP/meshconfig.conf" ]; then
-      echo -e "\n+-----------------------------------------------------------------+\nFichier de conf MESH trouvé ..."
+   if [ -f "$DIR/meshconfig.conf" ]; then
       return 0
    fi
    return 1
@@ -80,7 +83,7 @@ ver_fichier_conf () {
 
 information () {
    descr=$(whiptail --inputbox "Entrez une description pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
-                        
+
    exitstatus=$?
    if [ $exitstatus = 0 ]; then
       echo "Description établie."
@@ -88,17 +91,17 @@ information () {
       echo "Installation interrompue."
       return 1
    fi
-    
+
    addr=$(whiptail --inputbox "Entrez l'addresse de la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
-                                                            
+
    exitstatus=$?
    if [ $exitstatus = 0 ]; then
       echo "Addresse établie."
    else
       echo "Installation interrompue."
       return 1
-   fi    
-   
+   fi
+
    groupe=$(whiptail --title "Manage groups" --menu "Choisissez le groupe pour la nouvelle sonde" 16 78 5 \
         "Interne" "Groupe sondes internes ObAS"\
         "Exterieur" "Groupe sondes publiques" 3>&2 2>&1 1>&3)
@@ -122,7 +125,7 @@ information () {
          MEMBRE="b_member"
  	 echo $MEMBRE
       fi
-   fi  
+   fi
    return 0
 }
 
@@ -145,7 +148,7 @@ creation_json () {
    return 0
 }
 
-#Sauvegarde du fichier de conf actuel pour le restaurer en cas d'echec 
+#Sauvegarde du fichier de conf actuel pour le restaurer en cas d'echec
 
 backup_fichiers () {
    mv "$REP/meshconfig.conf" $REP/backup/$nomBack
@@ -219,24 +222,57 @@ appel_script_modif () {
    return 0
 }
 
+tache_list () {
+   echo ""
+   echo "TACHE LISTER LES SONDES"
+   echo ""
+   find $DIR/sites  -printf "%f\n"
+   echo ""
+}
+
+
 #Valider les arguments passés en paramètre
 
-while getopts "u:" opts; do
-  case $opts in
-    u)
-      optREP="1"
-      REP=$(echo ${OPTARG} | sed -e 's/\/$//')
-      ;;
-    \?)
-      aide
-      exit 1
-      ;;
-  esac
+# while getopts "u:" opts; do
+#   case $opts in
+#     u)
+#       optREP="1"
+#       REP=$(echo ${OPTARG} | sed -e 's/\/$//')
+#       ;;
+#     \?)
+#       aide
+#       exit 1
+#       ;;
+#   esac
+# done
+while [ "$1" != "" ]; do
+    PARAM=`echo $1 | awk -F= '{print $1}'`
+    VALUE=`echo $1 | awk -F= '{print $2}'`
+
+    case $PARAM in
+        -h | --help)
+            aide
+            exit
+            ;;
+        --action)
+            ACTION=$VALUE
+            ;;
+        --dir)
+            DIR=$VALUE
+            ;;
+        *)
+            echo "Parametre inconnu."
+            aide
+            exit 1
+            ;;
+    esac
+    shift
 done
+
 
 #Lancement de chaque étape en vérifiant les erreurs qui peuvent apparaitre
 
-echo -e "\n\nScript pour l'ajout de nouvelles sondes perfSONAR à l'Observatoire ...\n"
+echo -e "\n\nSCRIPT POUR L'ADMINISTRATION DES SONDES perfSONAR À L'OBSERVATOIRE ...\n"
 
 if ! assurer_root ; then
    die "Vous devez être superutilisateur pour exécuter ce script" 1
@@ -249,33 +285,39 @@ else
    dependences_script
 fi
 
-
 if ! fichiers_script_presents ; then
    die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant. \nFichiers script (repertoire courant) : add_sonde.sh | maj_mesh-config.py | template.jinja2 | creation_mesh.py \
         \nFichiers et repertoires MESH nécessaires (repertoire que vous avez définit) : REP groupes, sites et backup | FICH meshconfig.conf" 1
 fi
 
-
 if ! ver_fichier_conf ; then
    die "Aucun fichier de configuration MESH n'a pas été trouvé dans le chemin indiqué." 1
 fi
 
-if ! information ; then
-   die "L'installation a été interrompue." 1
-fi
+if [ $ACTION == "list" ] ; then
+   tache_list
+elif [ $ACTION == "add" ] ; then
+    echo "TACHE AJOUTER UN SONDE"
+    if ! information ; then
+       die "L'installation a été interrompue." 1
+    fi
 
-if ! creation_data_yaml ; then
-   die "Erreur inconnue." 1
-fi
-    
-if ! appel_script_modif ; then
-   die "Un erreur s'est produite pendant l'exécution de l'appel au script de modification du fichier JSON." 1
-fi
+    if ! creation_data_yaml ; then
+       die "Erreur inconnue." 1
+    fi
 
-#if ! redemarrer_serv_perfsonar ; then
-#   die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
-#else
-#   recuperer_logs
-#fi
+    if ! appel_script_modif ; then
+       die "Un erreur s'est produite pendant l'exécution de l'appel au script de modification du fichier JSON." 1
+    fi
 
+    #if ! redemarrer_serv_perfsonar ; then
+    #   die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
+    #else
+    #   recuperer_logs
+    #fi
+elif [ $ACTION == "delete" ] ; then
+    echo "TACHE SUPRIMER UN SONDE"
+else
+    aide
+fi
 exit 0
