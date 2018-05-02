@@ -42,8 +42,12 @@ for fich in sites:
     for line in open(fich).readlines():                                              #On lit chaque fichier et écrit dans le fichier
         file.write(line)
 
+<<<<<<< HEAD
 
 #On ferme le bloque
+=======
+#On écrit le final du bloque
+>>>>>>> 5f77db5739a3c83371191ad0307f4999f52126cf
 file.write("</organization>\n\n")        
 
 #On commence la partie des groupes
