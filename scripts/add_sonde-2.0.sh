@@ -17,7 +17,7 @@ aide()
     echo "     ${under}add${normal} : permet d'ajouter une nouvelle sonde"
     echo "  ${under}delete${normal} : permet de supprimer une sonde"
     echo ""
-    echo "${bold}--dir    : ${normal}spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
+    echo "${bold}--dir${normal}    : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
     echo ""
     echo ""
 }
