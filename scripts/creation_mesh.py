@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#----------------------------------------------------------------------------------------------#
-# Ce script permet de créer la configuration finale meshconfig.conf, avec tous les bloques   #
-# nécessaires (organisations, sites, tests, groupes, etc). Il va parcourir tout l'arborescence #
-# du MESH pour retrouver les données requises                                                  #   
-#----------------------------------------------------------------------------------------------#
+#-----------------------------------------------------------------------------------------------#
+# Ce script permet de créer la configuration finale meshconfig.conf, avec tous les bloques      #
+# nécessaires (organisations, sites, tests, groupes, etc). Il va parcourir toute l'arborescence #
+# du MESH pour retrouver les données requises                                                   #   
+#-----------------------------------------------------------------------------------------------#
 
 import os
 from jinja2 import Environment, FileSystemLoader
@@ -33,21 +33,17 @@ file = open(nomFich,"wb")                                                       
 file.write(entete)
 
 
-sites = glob.glob(reper + '/sites/*.cfg')                                            #Le script parcours le répertoire /sites en cherchant de fichiers .cfg et met leurs noms dans un tableau
+sites = glob.glob(reper + '/sites/*.cfg')                                            #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau
 types = [os.path.basename(x) for x in glob.glob(reper + "/groupes/disjoint/*")]      #Cas particulier pour le groupe 'disjoint' ; d'abord on obtient les types (a ou b)
 types.sort()                                                                         #Trier le tableau pour avoir en premier lieu les members 'a'
 
 #On parcours le tableau
 for fich in sites:
-    for line in open(fich).readlines():                                              #On lit chaque fichier et écrit dans le fichier
+    for line in open(fich).readlines():                                              #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
         file.write(line)
 
-<<<<<<< HEAD
-
 #On ferme le bloque
-=======
-#On écrit le final du bloque
->>>>>>> 5f77db5739a3c83371191ad0307f4999f52126cf
+
 file.write("</organization>\n\n")        
 
 #On commence la partie des groupes
