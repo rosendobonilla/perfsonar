@@ -1,19 +1,23 @@
 #!/bin/bash
 
 ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE=""
+bold=$(tput bold)
+normal=$(tput sgr0)
+italic=$(tput sitm)
+under=$(tput smul)
 
 aide()
 {
     echo ""
-    echo "Usage    : $0 --action=[list,add,delete] --dir=[répertoire]" 1>&2
+    echo "${bold}Usage    : ${normal}$0 ${italic}--action=[list,add,delete] --dir=[répertoire]" 1>&2
     echo ""
-    echo "--action : spécifie quelle type de tache on veut faire."
+    echo "${bold}--action : ${normal}spécifie quelle type de tache on veut faire."
     echo ""
-    echo "    list : affiche la liste des sondes créees"
-    echo "     add : permet d'ajouter une nouvelle sonde"
-    echo "  delete : permet de supprimer une sonde"
+    echo "    ${under}list${normal} : affiche la liste des sondes créees"
+    echo "     ${under}add${normal} : permet d'ajouter une nouvelle sonde"
+    echo "  ${under}delete${normal} : permet de supprimer une sonde"
     echo ""
-    echo "--dir    : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
+    echo "${bold}--dir    : ${normal}spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
     echo ""
     echo ""
 }
