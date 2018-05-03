@@ -270,10 +270,13 @@ appel_script_modif () {
 }
 
 tache_list () {
-   echo ""
-   echo "TACHE LISTER LES SONDES"
-   echo ""
-   find $DIR/sites  -printf "%f\n"
+   echo "" ; i=1
+   printf "\t\t%-25s %s\n\n" "HOST" "DESCRIPTION"
+   for file in $(ls $DIR/sites) ; do
+     descr=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//')
+     printf "\t[ $i ]\t%-25s %s\n" "${file%.*}" "$descr"
+     (( i++ ))
+   done
    echo ""
 }
 
