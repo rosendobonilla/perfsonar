@@ -8,15 +8,13 @@ under=$(tput smul)
 
 arborescence () {
   echo """
-EXAMPLE DES FICHIERS REQUIS PAR LE SCRIPT ET L'ARBORESCENCE DU REPERTOIRE
+EXAMPLE DES FICHIERS REQUIS PAR LE SCRIPT ET DE L'ARBORESCENCE DU REPERTOIRE
 
 .
 ├── add_sonde-2.0.sh
 ├── creation_mesh.py
 ├── maj_meshconfig.py
-└── template.jinja2"""
-
-echo """
+└── template.jinja2
 
 ../mesh
 ├── backup
@@ -331,7 +329,7 @@ while [ "$1" != "" ]; do
             ACTION=$VALUE
             ;;
         --dir)
-            DIR=$VALUE
+            DIR=$(echo "$VALUE" | sed -e 's/\/$//')
             ;;
         *)
             echo "Parametre inconnu."
