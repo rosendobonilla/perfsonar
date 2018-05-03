@@ -27,7 +27,7 @@ entete = """description PerfSONAR Observatoire Mesh Config
 
 file = open(nomFich,"wb")                                                            #On crée le nouveau fichier de configuration dans le chemin spécifié
 
-#L'entete va etre toujours la meme, on le met donc en brute dans le fichier
+#L'entete va etre toujours la meme, on le met donc en dur dans le fichier
 file.write(entete)
 
 
