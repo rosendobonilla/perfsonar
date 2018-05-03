@@ -46,15 +46,16 @@ EXAMPLE DES FICHIERS REQUIS PAR LE SCRIPT ET DE L'ARBORESCENCE DU REPERTOIRE
 aide()
 {
     echo ""
-    echo "${bold}Usage${normal}    : $0 ${italic}--action=[list,add,delete] --dir=[répertoire]" 1>&2
+    echo "${bold}USAGE${normal}       : $0 ${italic}--action=[list,add,delete] --dir=[répertoire] [-h] [--help]" 1>&2
     echo ""
-    echo "${normal}${bold}--action${normal} : spécifie quelle type de tache on veut réaliser."
+    echo "${normal}${bold}--action${normal}    : spécifie quelle type de tache on veut réaliser."
     echo ""
-    echo "    ${under}list${normal} : affiche la liste des sondes définies dans le fichier meshconfig"
-    echo "     ${under}add${normal} : permet d'ajouter une nouvelle sonde"
-    echo "  ${under}delete${normal} : permet de supprimer une sonde"
+    echo "       ${under}list${normal} : affiche la liste des sondes définies dans le fichier meshconfig"
+    echo "        ${under}add${normal} : permet d'ajouter une nouvelle sonde"
+    echo "     ${under}delete${normal} : permet de supprimer une sonde"
     echo ""
-    echo "${bold}--dir${normal}    : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
+    echo "${bold}--dir${normal}       : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
+    echo "${bold}-h, --help${normal}  : usage."
     echo ""
     echo ""
 }
