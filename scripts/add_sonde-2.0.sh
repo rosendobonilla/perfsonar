@@ -320,7 +320,7 @@ if ! ver_fichier_conf ; then
 fi
 
 if [ $ACTION == "list" ] ; then
-   tache_list
+    tache_list
 elif [ $ACTION == "add" ] ; then
     echo "TACHE AJOUTER UN SONDE"
     if ! information ; then
