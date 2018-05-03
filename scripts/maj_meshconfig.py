@@ -4,7 +4,7 @@
 #--------------------------------------------------------------------------------------------#
 # Ce script permet de créer la configuration de chaque nouvelle sonde et la placer dans le   #
 # repértoire correspondant. De plus, il crée un lien symbolique vers le répertoire groupes   #
-# pour les lier (un peu comme un relation d'un base de données).							 #
+# pour les 'lier'.                                              							 #
 #--------------------------------------------------------------------------------------------#
 
 import os
