@@ -1,10 +1,7 @@
 #!/bin/bash
 
 ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE=""
-bold=$(tput bold)
-normal=$(tput sgr0)
-italic=$(tput sitm)
-under=$(tput smul)
+bold=$(tput bold) ; normal=$(tput sgr0) ; italic=$(tput sitm) ; under=$(tput smul)
 
 arborescence () {
   echo """
