@@ -178,7 +178,6 @@ information () {
 #Création du fichier data.yaml pour remplir le template
 
 creation_data_yaml () {
-   echo "Etape creation du fichier data.yaml"
    echo "desc: "$descr"" >> ./data.yaml
    echo "add: "$addr"" >> ./data.yaml
    return 0
