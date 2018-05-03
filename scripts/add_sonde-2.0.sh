@@ -271,10 +271,11 @@ appel_script_modif () {
 
 tache_list () {
    echo "" ; i=1
+   #Formatage de l'entete
    printf "\t\t%-25s %s\n\n" "HOST" "DESCRIPTION"
-   for file in $(ls $DIR/sites) ; do
+   for file in $(ls $DIR/sites) ; do                                                    #Recuperer les noms des sondes
      descr=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//')
-     printf "\t[ $i ]\t%-25s %s\n" "${file%.*}" "$descr"
+     printf "\t[ $i ]\t%-25s %s\n" "${file%.*}" "$descr"                                #Formater chaque ligne
      (( i++ ))
    done
    echo ""
@@ -282,6 +283,8 @@ tache_list () {
 
 tache_sup () {
   i=0
+  #Ce bucle sert à créer un tableu de facon qu'il puisse etre traité par whiptail
+  #Pour ca on a besoin de stocker en premier lieu le nom du fichier, ensuite son description et enfin l'etat de radiolist
   for file in $(ls $DIR/sites) ; do
     sondes[i]=$(echo ${file%.*})
     (( i++ ))
@@ -291,18 +294,21 @@ tache_sup () {
     (( i++ ))
   done
 
+  #On recupere la sonde choisie dans le radiolist
   sonde_sup=$(whiptail --title "Supprimer une sonde " --radiolist "Choisissez la sonde que vous voulez supprimer :" 25 78 16 "${sondes[@]}" 3>&1 1>&2 2>&3)
 
+  #Si l'utilisateur n'a rien chosi, on sort du script
   if [[ $sonde_sup == "" ]] ; then echo "Rien" ; return 1 ; fi
 
+  #Radiolist utilise le tableau crée précedement
   if (whiptail --title "Supprimer une sonde" --yesno "Vous êtes en train de supprimer la sonde $sonde_sup. Vous devez vous assurer que vous n'en avez plus besoin. Voulez-vous continuer ?" 8 78) then
     lienS=$(find $DIR/groupes/ -name $sonde_sup)
     echo "Lien symbolique à supp : $lienS"
     echo "Site a supprimer : $DIR/sites/$sonde_sup.cfg"
-    rm -f $lienS ; rm -f "$DIR/sites/$sonde_sup.cfg"
+    rm -f $lienS ; rm -f "$DIR/sites/$sonde_sup.cfg"                                     #Si l'utilisateur confirme la suppression on ecrase le lien symbolique et le site
     echo "Mise à jour de la nouvelle configuration ..."
-    backup_fichiers
-    ./creation_mesh.py "${DIR}"
+    backup_fichiers                                                                      #On sauvegarde le fichier meshconfig actuel
+    ./creation_mesh.py "${DIR}"                                                          #On crée un nouveau meshconfig
     echo "La sonde a été bien supprimée."
   else
     echo "La sonde n'a pas été supprimée."
@@ -386,7 +392,6 @@ elif [ $ACTION == "add" ] ; then
 elif [ $ACTION == "delete" ] ; then
     echo "TACHE SUPRIMER UN SONDE"
     if ! tache_sup ; then die "Vous devez choisir la sonde à supprimer" 1 ; fi
-    #./creation_mesh ${DIR}
 else
     aide
 fi
