@@ -43,7 +43,6 @@ echo """
     └── ops.est.fr.cfg
 
 """
-
 }
 
 aide()
@@ -51,9 +50,9 @@ aide()
     echo ""
     echo "${bold}Usage${normal}    : $0 ${italic}--action=[list,add,delete] --dir=[répertoire]" 1>&2
     echo ""
-    echo "${normal}${bold}--action${normal} : spécifie quelle type de tache on veut faire."
+    echo "${normal}${bold}--action${normal} : spécifie quelle type de tache on veut réaliser."
     echo ""
-    echo "    ${under}list${normal} : affiche la liste des sondes créees"
+    echo "    ${under}list${normal} : affiche la liste des sondes définies dans le fichier meshconfig"
     echo "     ${under}add${normal} : permet d'ajouter une nouvelle sonde"
     echo "  ${under}delete${normal} : permet de supprimer une sonde"
     echo ""
@@ -272,10 +271,10 @@ appel_script_modif () {
 tache_list () {
    echo "" ; i=1
    #Formatage de l'entete
-   printf "\t\t%-25s %s\n\n" "HOST" "DESCRIPTION"
+   printf "\t\t%-25s\t\t%s\n\n" "${bold}HOST" "DESCRIPTION"
    for file in $(ls $DIR/sites) ; do                                                    #Recuperer les noms des sondes
      descr=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//')
-     printf "\t[ $i ]\t%-25s %s\n" "${file%.*}" "$descr"                                #Formater chaque ligne
+     printf "${normal}\t[ $i ]\t%-25s %s\n" "${file%.*}" "$descr"                                #Formater chaque ligne
      (( i++ ))
    done
    echo ""
