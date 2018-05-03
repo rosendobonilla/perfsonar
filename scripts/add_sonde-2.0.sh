@@ -29,7 +29,7 @@ echo """
 │   │   │   ├── mex.fr -> ../mesh/sites/mex.fr.cfg
 │   │   └── b_member
 │   │       ├── arg.fr -> ../mesh/sites/arg.fr.cfg
-│   │       ├── col.fr -> ../mesh/sites/col.fr.cfg
+│   │       └── col.fr -> ../mesh/sites/col.fr.cfg
 │   └── mesh
 │       ├── can.ops.fr -> ../mesh/sites/can.ops.fr.cfg
 │       └── ops.est.fr -> ../mesh/sites/ops.est.fr.cfg
