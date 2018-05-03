@@ -47,7 +47,7 @@ dependences_script () {
       if ! command -v whiptail>/dev/null 2>&1 ; then apt-get -y install whiptail; fi
    elif [[ -e "/etc/centos-release" ]]; then
       if ! command -v whiptail>/dev/null 2>&1 ; then yum -y install newt; fi
-      if [ -z $(rpm -qa | grep yaml) ] ; then yum -y install python-yaml; fi
+      if [ -z $(rpm -qa | gDIR yaml) ] ; then yum -y install python-yaml; fi
    fi
    return 0
 }
@@ -147,7 +147,7 @@ creation_data_yaml () {
 #Création du nouveau fichier JSON
 
 creation_json () {
-   /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json "$REP/meshconfig.conf"
+   /usr/lib/perfsonar/bin/build_json -o $path_SRV/mesh_central.json "$DIR/meshconfig.conf"
    if [ $? != "0" ] ; then
       return 1
    fi
@@ -157,14 +157,14 @@ creation_json () {
 #Sauvegarde du fichier de conf actuel pour le restaurer en cas d'echec
 
 backup_fichiers () {
-   mv "$REP/meshconfig.conf" $REP/backup/$nomBack
+   mv "$DIR/meshconfig.conf" $DIR/backup/$nomBack
 }
 
 #Essayez de revenir à l'état anterieur au lancement du script
 
 recuperation () {
-   rm -f "$REP/meshconfig.conf"
-   cp "$REP/backup/$nomback" "$REP/meshconfig.conf"
+   rm -f "$DIR/meshconfig.conf"
+   cp "$DIR/backup/$nomback" "$DIR/meshconfig.conf"
    if creation_json ; then
       echo "Recupération de la config precédente réussite."
       return 0
@@ -204,13 +204,13 @@ recuperer_logs () {
 #Appel aux scripts en Python qui feront toutes les modifications dans les fichiers correspondants
 
 appel_script_modif () {
-   echo -e "\nAppel au script de modification du fichier mesh config : $REP ..."
+   echo -e "\nAppel au script de modification du fichier mesh config : $DIR ..."
 
    #Cette partie permet  d'envoyer les paramètres selon le type de groupe, le groupe disjoint nécessite d'un paramètre en plus
    if [[ $TYPE == "disjoint" ]] ; then
-      ./maj_meshconfig.py "${REP}" "${addr}" "${TYPE}" "${MEMBRE}"
+      ./maj_meshconfig.py "${DIR}" "${addr}" "${TYPE}" "${MEMBRE}"
    else
-      ./maj_meshconfig.py "${REP}" "${addr}" "${TYPE}"
+      ./maj_meshconfig.py "${DIR}" "${addr}" "${TYPE}"
    fi
    echo -e "\n+-----------------------------------------------------------------+\n"
    echo -e "Nettoyage...\n"
@@ -218,10 +218,10 @@ appel_script_modif () {
    rm -f ./data.yaml
    #rm -f $path_SRV/mesh_central.json
    backup_fichiers
-   ./creation_mesh.py "${REP}"
+   ./creation_mesh.py "${DIR}"
    #if ! creation_json ; then
    #   if ! recuperation ; then
-   #      die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $REP.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
+   #      die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $DIR.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
    #   fi
    #   die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
    #fi
@@ -236,6 +236,37 @@ tache_list () {
    echo ""
 }
 
+tache_sup () {
+  i=0
+  for file in $(ls $DIR/sites) ; do
+    sondes[i]=$(echo ${file%.*})
+    (( i++ ))
+    sondes[i]=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//')
+    (( i++ ))
+    sondes[i]="OFF"
+    (( i++ ))
+  done
+
+  sonde_sup=$(whiptail --title "Supprimer une sonde " --radiolist "Choisissez la sonde que vous voulez supprimer :" 25 78 16 "${sondes[@]}" 3>&1 1>&2 2>&3)
+
+  if [[ $sonde_sup == "" ]] ; then echo "Rien" ; return 1 ; fi
+
+  if (whiptail --title "Supprimer une sonde" --yesno "Vous êtes en train de supprimer la sonde $sonde_sup. Vous devez vous assurer que vous n'en avez plus besoin. Voulez-vous continuer ?" 8 78) then
+    lienS=$(find $DIR/groupes/ -name $sonde_sup)
+    echo "Lien symbolique à supp : $lienS"
+    echo "Site a supprimer : $DIR/sites/$sonde_sup.cfg"
+    rm -f $lienS ; rm -f "$DIR/sites/$sonde_sup.cfg"
+    echo "Mise à jour de la nouvelle configuration ..."
+    backup_fichiers
+    ./creation_mesh.py "${DIR}"
+    echo "La sonde a été bien supprimée."
+  else
+    echo "La sonde n'a pas été supprimée."
+    exit 1
+  fi
+
+  return 0
+}
 
 #Valider les arguments passés en paramètre
 
@@ -280,8 +311,8 @@ else
 fi
 
 if ! fichiers_script_presents ; then
-   die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant. \nFichiers script (repertoire courant) : add_sonde.sh | maj_mesh-config.py | template.jinja2 | creation_mesh.py \
-        \nFichiers et repertoires MESH nécessaires (repertoire que vous avez définit) : REP groupes, sites et backup | FICH meshconfig.conf" 1
+   die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant. \nFichiers script (DIRertoire courant) : add_sonde.sh | maj_mesh-config.py | template.jinja2 | creation_mesh.py \
+        \nFichiers et DIRertoires MESH nécessaires (DIRertoire que vous avez définit) : DIR groupes, sites et backup | FICH meshconfig.conf" 1
 fi
 
 if ! ver_fichier_conf ; then
@@ -311,6 +342,8 @@ elif [ $ACTION == "add" ] ; then
     #fi
 elif [ $ACTION == "delete" ] ; then
     echo "TACHE SUPRIMER UN SONDE"
+    if ! tache_sup ; then die "Vous devez choisir la sonde à supprimer" 1 ; fi
+    #./creation_mesh ${DIR}
 else
     aide
 fi
