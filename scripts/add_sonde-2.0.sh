@@ -6,6 +6,46 @@ normal=$(tput sgr0)
 italic=$(tput sitm)
 under=$(tput smul)
 
+arborescence () {
+  echo """
+EXAMPLE DES FICHIERS REQUIS PAR LE SCRIPT ET L'ARBORESCENCE DU REPERTOIRE
+
+.
+├── add_sonde-2.0.sh
+├── creation_mesh.py
+├── maj_meshconfig.py
+└── template.jinja2"""
+
+echo """
+
+../mesh
+├── backup
+│   ├── meshconfig-02-05-2018-09:20.bak
+│   ├── meshconfig-02-05-2018-11:07.bak
+├── groupes
+│   ├── disjoint
+│   │   ├── a_member
+│   │   │   ├── mar.fr -> ../mesh/sites/mar.fr.cfg
+│   │   │   ├── mex.fr -> ../mesh/sites/mex.fr.cfg
+│   │   └── b_member
+│   │       ├── arg.fr -> ../mesh/sites/arg.fr.cfg
+│   │       ├── col.fr -> ../mesh/sites/col.fr.cfg
+│   └── mesh
+│       ├── can.ops.fr -> ../mesh/sites/can.ops.fr.cfg
+│       └── ops.est.fr -> ../mesh/sites/ops.est.fr.cfg
+├── meshconfig.conf
+└── sites
+    ├── arg.fr.cfg
+    ├── can.ops.fr.cfg
+    ├── col.fr.cfg
+    ├── mar.fr.cfg
+    ├── mex.fr.cfg
+    └── ops.est.fr.cfg
+
+"""
+
+}
+
 aide()
 {
     echo ""
@@ -28,6 +68,7 @@ die () {
    echo -e "\n+-----------------------------------------------------------------+\n"
    echo -e "Le script à echoué à cause de l'erreur suivante : \n$1\n"
    echo -e "\n+-----------------------------------------------------------------+\n"
+   if [[ $2 == "5" ]] ; then arborescence ; fi
    exit "$2"
 }
 
@@ -311,8 +352,7 @@ else
 fi
 
 if ! fichiers_script_presents ; then
-   die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant. \nFichiers script (DIRertoire courant) : add_sonde.sh | maj_mesh-config.py | template.jinja2 | creation_mesh.py \
-        \nFichiers et DIRertoires MESH nécessaires (DIRertoire que vous avez définit) : DIR groupes, sites et backup | FICH meshconfig.conf" 1
+   die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant." 5
 fi
 
 if ! ver_fichier_conf ; then
