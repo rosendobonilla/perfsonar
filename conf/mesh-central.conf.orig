@@ -20,12 +20,12 @@ description PerfSONAR Observatoire Mesh Config
             state   Strasbourg
             latitude   48.583
             longitude  7.767
-        </location>  
-    
+        </location>
+
         <host>
               description Sonde Batiment Sud - Central
               address ops.u-strasbg.fr
-              
+
               <measurement_archive>
                     type traceroute
                     read_url http://ops.u-strasbg.fr/esmond/perfsonar/archive
@@ -62,12 +62,12 @@ description PerfSONAR Observatoire Mesh Config
             state   Strasbourg
             latitude   48.583
             longitude  7.767
-        </location>  
-        
+        </location>
+
         <host>
               description Sonde Batiment Est
               address ops-se.u-strasbg.fr
-              
+
               <measurement_archive>
                     type traceroute
                     read_url http://ops-se.u-strasbg.fr/esmond/perfsonar/archive
@@ -93,17 +93,17 @@ description PerfSONAR Observatoire Mesh Config
               </measurement_archive>
         </host>
     </site>
-    
+
 #fin_sonde_est
 
 #debut_sonde_coupole
 
     <site>
-        
+
         <host>
               description Sonde Coupole
               address ops-sc.u-strasbg.fr
-                    
+
               <measurement_archive>
                     type traceroute
                     read_url http://ops-sc.u-strasbg.fr/esmond/perfsonar/archive
@@ -140,12 +140,12 @@ description PerfSONAR Observatoire Mesh Config
             state   Strasbourg
             latitude   48.583
             longitude  7.767
-        </location>      
-        
+        </location>
+
         <host>
               description Sonde DBUG
               address ops-dbug.u-strasbg.fr
-                    
+
               <measurement_archive>
                     type traceroute
                     read_url http://ops-dbug.u-strasbg.fr/esmond/perfsonar/archive
@@ -180,15 +180,15 @@ description PerfSONAR Observatoire Mesh Config
 
 <organization>
     description     IPHC/CNRS Strasbourg
-    
+
     <site>
         <location>
             city    Strasbourg
             state   Strasbourg
             latitude   48.604
             longitude  7.711
-        </location>  
-        
+        </location>
+
         <host>
 	      no_agent 1
               description IPHC Strasbourg
@@ -199,15 +199,15 @@ description PerfSONAR Observatoire Mesh Config
 
 <organization>
     description     LPC-CLFD
-    
+
     <site>
         <location>
             city    Clermont
             state   Clermont
             latitude   45.777
             longitude  3.087
-        </location>  
-        
+        </location>
+
         <host>
               no_agent 1
               description Clermont, Ferrand
@@ -221,8 +221,8 @@ description PerfSONAR Observatoire Mesh Config
 ###################################################
 ###############DEFINITION DE TESTS#################
 ###################################################
-   
-   
+
+
 #Specification test BANDE PASANTE TCP INTERNE
 <test_spec bwctl_test_tcp>
   type              perfsonarbuoy/bwctl  # Perform a bwctl test (i.e. achievable bandwidth)
@@ -245,7 +245,7 @@ description PerfSONAR Observatoire Mesh Config
 #  udp_bandwith      50000000             # Perform a 50Mbps test
 </test_spec>
 
-#Specification test BANDE PASANTE TCP vers l'exterieur 
+#Specification test BANDE PASANTE TCP vers l'exterieur
 <test_spec bwctl_test_out_tcp>
   type              perfsonarbuoy/bwctl  # Perform a bwctl test (i.e. achievable bandwidth)
   tool              bwctl/iperf3         # Use 'iperf' to do the bandwidth test
@@ -257,7 +257,7 @@ description PerfSONAR Observatoire Mesh Config
   omit_interval     5                    # ignore first few seconds of test
 </test_spec>
 
-#Specification test BANDE PASANTE UDP vers l'exterieur 
+#Specification test BANDE PASANTE UDP vers l'exterieur
 <test_spec bwctl_test_out_udp>
   type              perfsonarbuoy/bwctl  # Perform a bwctl test (i.e. achievable bandwidth)
   tool              bwctl/iperf3         # Use 'iperf' to do the bandwidth test
@@ -302,9 +302,9 @@ description PerfSONAR Observatoire Mesh Config
 
 
 #Groupe Observatoire - Exterieur / Dans ce cas, le Bat Sud (Sonde centrale) utilise l'addresse publique
-<group obas_group_exterieur>
+<group obas_exterieur_disjoint>
    type disjoint
-    
+
    #center_address   address publique
    a_member     ops.u-strasbg.fr
 
@@ -313,7 +313,7 @@ description PerfSONAR Observatoire Mesh Config
 </group>
 
 #Groupe Observatoire - Réseau interne / Dans ce cas, le Bat Sud (Sonde centrale) utilise l'addresse privée
-<group obas_group_interne>
+<group obas_interne_mesh>
     type       mesh
 
     member     ops.u-strasbg.fr
@@ -333,49 +333,49 @@ description PerfSONAR Observatoire Mesh Config
 
 <test>
   description       Throughput Testing TCP Observatoire
-  group             obas_group_interne
+  group             obas_interne_mesh
   test_spec         bwctl_test_tcp
 </test>
 
 <test>
   description       Throughput Testing UDP Observatoire
-  group             obas_group_interne
+  group             obas_interne_mesh
   test_spec         bwctl_test_udp
 </test>
 
 <test>
   description       OWAMP Testing
-  group             obas_group_interne
+  group             obas_interne_mesh
   test_spec         owamp_test
 </test>
 
 <test>
   description       Ping Testing
-  group             obas_group_interne
+  group             obas_interne_mesh
   test_spec         ping_test
 </test>
 
 <test>
   description       Traceroute Testing
-  group             obas_group_interne
+  group             obas_interne_mesh
   test_spec         traceroute_test
 </test>
 
 #Tests à faire vers l'exterieur
 <test>
   description       Throughput Testing TCP Exterieur
-  group             obas_group_exterieur
+  group             obas_exterieur_disjoint
   test_spec         bwctl_test_out_tcp
 </test>
 
 <test>
   description       Throughput Testing UDP Exterieur
-  group             obas_group_exterieur
+  group             obas_exterieur_disjoint
   test_spec         bwctl_test_out_udp
 </test>
 
 <test>
   description       Ping Testing Exterieur
-  group             obas_group_exterieur
+  group             obas_exterieur_disjoint
   test_spec         ping_test
 </test>

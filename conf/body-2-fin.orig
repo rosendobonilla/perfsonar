@@ -1,0 +1,56 @@
+###################################################
+#############RELATION TESTS/GROUPES################
+###################################################
+
+
+#Tests à faire dans le réseau interne (sondes dans l'Observatoire)
+#Les tests de bande pasante se font chaque jour et pas tous les 6 heures (intervalle par défaut) car ca peut réduire la performance du réseau vu que c'est en interne
+
+<test>
+  description       Throughput Testing TCP Observatoire
+  group             obas_interne_mesh
+  test_spec         bwctl_test_tcp
+</test>
+
+<test>
+  description       Throughput Testing UDP Observatoire
+  group             obas_interne_mesh
+  test_spec         bwctl_test_udp
+</test>
+
+<test>
+  description       OWAMP Testing
+  group             obas_interne_mesh
+  test_spec         owamp_test
+</test>
+
+<test>
+  description       Ping Testing
+  group             obas_interne_mesh
+  test_spec         ping_test
+</test>
+
+<test>
+  description       Traceroute Testing
+  group             obas_interne_mesh
+  test_spec         traceroute_test
+</test>
+
+#Tests à faire vers l'exterieur
+<test>
+  description       Throughput Testing TCP Exterieur
+  group             obas_exterieur_disjoint
+  test_spec         bwctl_test_out_tcp
+</test>
+
+<test>
+  description       Throughput Testing UDP Exterieur
+  group             obas_exterieur_disjoint
+  test_spec         bwctl_test_out_udp
+</test>
+
+<test>
+  description       Ping Testing Exterieur
+  group             obas_exterieur_disjoint
+  test_spec         ping_test
+</test>

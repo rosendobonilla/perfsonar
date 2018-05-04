@@ -1,14 +1,14 @@
 <organization>
     description     IPHC/CNRS Strasbourg
-    
+
     <site>
         <location>
             city    Strasbourg
             state   Strasbourg
             latitude   48.604
             longitude  7.711
-        </location>  
-        
+        </location>
+
         <host>
 	      no_agent 1
               description IPHC Strasbourg
@@ -19,15 +19,15 @@
 
 <organization>
     description     LPC-CLFD
-    
+
     <site>
         <location>
             city    Clermont
             state   Clermont
             latitude   45.777
             longitude  3.087
-        </location>  
-        
+        </location>
+
         <host>
               no_agent 1
               description Clermont, Ferrand
