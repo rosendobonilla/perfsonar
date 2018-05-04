@@ -89,7 +89,7 @@ dependences_script () {
       if ! command -v whiptail>/dev/null 2>&1 ; then apt-get -y install whiptail; fi
    elif [[ -e "/etc/centos-release" ]]; then
       if ! command -v whiptail>/dev/null 2>&1 ; then yum -y install newt; fi
-      if [ -z $(rpm -qa | gDIR yaml) ] ; then yum -y install python-yaml; fi
+      if [ -z $(rpm -qa | grep yaml) ] ; then yum -y install python-yaml; fi
    fi
    return 0
 }
