@@ -107,7 +107,7 @@ assurer_entres () {
 #Vérifier que tous les fichiers qui comportent le script sont dans les répertoire courant
 
 fichiers_script_presents () {
-   if [ ! -f "./maj_meshconfig.py" ] || [ ! -f "./template.jinja2" ]; then
+   if [ ! -f "./maj_meshconfig.py" ] || [ ! -f "./template.jinja2" ] || [ ! -f "./creation_mesh.py" ] ; then
       return 1
    fi
    if [ ! -d "$DIR/sites" ] || [ ! -d "$DIR/backup" ] || [ ! -d "$DIR/groupes" ] || [ ! -f "$DIR/meshconfig.conf" ]  ; then
