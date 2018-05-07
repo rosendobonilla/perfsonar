@@ -169,6 +169,8 @@ active_tests () {
 
   test_ac=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist "Par défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 
+  echo "Test selectionés : ${test_ac[0]}"
+
   i=0
   DIR="/home/rosendo/Documents/mesh"
   for file in $(ls -p $DIR/tests/ | grep -v /) ; do
@@ -188,6 +190,7 @@ active_tests () {
 
   test_ac=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist "Par défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 
+  echo "Test selectionés : $test_ac"
 }
 
 
@@ -238,6 +241,7 @@ information () {
  	 echo $MEMBRE
       fi
    fi
+
    return 0
 }
 
@@ -410,10 +414,6 @@ done
 
 echo -e "\n\nSCRIPT POUR L'ADMINISTRATION DES SONDES perfSONAR À L'OBSERVATOIRE ...\n"
 
-active_tests
-
-exit 0
-
 if ! assurer_root ; then
    die "Vous devez être superutilisateur pour exécuter ce script" 1
 fi
@@ -457,6 +457,9 @@ elif [ $ACTION == "add" ] ; then
 elif [ $ACTION == "delete" ] ; then
     echo "TACHE SUPRIMER UN SONDE"
     if ! tache_sup_sonde ; then die "Vous devez choisir la sonde à supprimer" 1 ; fi
+elif [ $ACTION == "conftest" ] ; then
+    whiptail --title "Manage tests" --msgbox "Normalement, cette partie est déjà configurée. Modifiez si besoin." 8 78
+    active_tests
 else
     aide
 fi
