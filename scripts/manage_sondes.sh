@@ -127,6 +127,70 @@ ver_fichier_conf () {
    return 1
 }
 
+
+# for val in "${mesh[@]}" ; do
+#     if [[ ${file%.*} == $val ]] ; then
+#         echo "Val array : $val Val fich : ${file%.*} Valor a ON"
+#         tests[i]="ON"
+#     else
+#       tests[i]="OFF"
+#       echo "Valor a OFF de $file"
+#     fi
+# done
+
+active_tests () {
+  i=0 ; ind=0
+  while IFS='' read -r linea || [[ -n "$linea" ]]; do
+      div=(${linea//,/ })
+      if [[ ${div[0]} == "obas_interne_mesh" ]] ; then
+          mesh[i]=${div[1]}
+          (( i++ ))
+      else
+          disj[i]=${div[1]}
+          (( ind++ ))
+      fi
+  done < $DIR/tests/actives/active.cfg
+  i=0
+  DIR="/home/rosendo/Documents/mesh"
+  for file in $(ls -p $DIR/tests/ | grep -v /) ; do
+    tests[i]=$(echo ${file%.*}) ; (( i++ ))
+    tests[i]="" ; (( i++ ))
+    tests[i]="OFF" ; (( i++ ))
+  done
+
+  for i in $(seq 0 ${#tests[@]}) ; do
+        for val in "${mesh[@]}" ; do
+            if [[ ${tests[i]} == $val ]] ; then
+                ac=$i+2
+                tests[ac]="ON"
+            fi
+       done
+  done
+
+  test_ac=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist "Par défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+
+  i=0
+  DIR="/home/rosendo/Documents/mesh"
+  for file in $(ls -p $DIR/tests/ | grep -v /) ; do
+    tests[i]=$(echo ${file%.*}) ; (( i++ ))
+    tests[i]="" ; (( i++ ))
+    tests[i]="OFF" ; (( i++ ))
+  done
+
+  for i in $(seq 0 ${#tests[@]}) ; do
+        for val in "${disj[@]}" ; do
+            if [[ ${tests[i]} == $val ]] ; then
+                ac=$i+2
+                tests[ac]="ON"
+            fi
+       done
+  done
+
+  test_ac=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist "Par défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+
+}
+
+
 #Demander les informations concernant la sonde
 
 information () {
@@ -281,17 +345,14 @@ tache_list () {
    echo ""
 }
 
-tache_sup () {
+tache_sup_sonde () {
   i=0
   #Ce bucle sert à créer un tableu de facon qu'il puisse etre traité par whiptail
   #Pour ca on a besoin de stocker en premier lieu le nom du fichier, ensuite son description et enfin l'etat de radiolist
   for file in $(ls $DIR/sites) ; do
-    sondes[i]=$(echo ${file%.*})
-    (( i++ ))
-    sondes[i]=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//')
-    (( i++ ))
-    sondes[i]="OFF"
-    (( i++ ))
+    sondes[i]=$(echo ${file%.*}) ; (( i++ ))
+    sondes[i]=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//') ; (( i++ ))
+    sondes[i]="OFF" ; (( i++ ))
   done
 
   #On recupere la sonde choisie dans le radiolist
@@ -349,6 +410,10 @@ done
 
 echo -e "\n\nSCRIPT POUR L'ADMINISTRATION DES SONDES perfSONAR À L'OBSERVATOIRE ...\n"
 
+active_tests
+
+exit 0
+
 if ! assurer_root ; then
    die "Vous devez être superutilisateur pour exécuter ce script" 1
 fi
@@ -391,7 +456,7 @@ elif [ $ACTION == "add" ] ; then
     #fi
 elif [ $ACTION == "delete" ] ; then
     echo "TACHE SUPRIMER UN SONDE"
-    if ! tache_sup ; then die "Vous devez choisir la sonde à supprimer" 1 ; fi
+    if ! tache_sup_sonde ; then die "Vous devez choisir la sonde à supprimer" 1 ; fi
 else
     aide
 fi
