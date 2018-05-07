@@ -1,0 +1,5 @@
+<test_spec traceroute_test>
+  type              traceroute
+  test_interval     600
+  packet_size       40
+</test_spec>

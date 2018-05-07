@@ -1,0 +1,7 @@
+<test_spec bwctl_test_udp>
+  type              perfsonarbuoy/bwctl  # Perform a bwctl test (i.e. achievable bandwidth)
+  tool              bwctl/iperf3         # Use 'iperf' to do the bandwidth test
+  protocol          udp                  # Run a TCP bandwidth test
+  interval          86400                # Run the test every day
+  duration          10                   # Perform a 10 second test
+</test_spec>
