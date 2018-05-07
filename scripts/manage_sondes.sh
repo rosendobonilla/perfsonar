@@ -107,7 +107,7 @@ assurer_entres () {
 #Vérifier que tous les fichiers qui comportent le script sont dans les répertoire courant
 
 fichiers_script_presents () {
-   if [ ! -f "./maj_meshconfig.py" ] || [ ! -f "./template.jinja2" ] || [ ! -f "./creation_mesh.py" ] ; then
+   if [ ! -f "./creation_meshconfig.py" ] || [ ! -f "./template.jinja2" ] || [ ! -f "./sonde_conf.py" ] ; then
       return 1
    fi
    if [ ! -d "$DIR/sites" ] || [ ! -d "$DIR/backup" ] || [ ! -d "$DIR/groupes" ] || [ ! -f "$DIR/meshconfig.conf" ]  ; then
@@ -249,9 +249,9 @@ appel_script_modif () {
 
    #Cette partie permet  d'envoyer les paramètres selon le type de groupe, le groupe disjoint nécessite d'un paramètre en plus
    if [[ $TYPE == "disjoint" ]] ; then
-      ./maj_meshconfig.py "${DIR}" "${addr}" "${TYPE}" "${MEMBRE}"
+      ./sonde_conf.py "${DIR}" "${addr}" "${TYPE}" "${MEMBRE}"
    else
-      ./maj_meshconfig.py "${DIR}" "${addr}" "${TYPE}"
+      ./sonde_conf.py "${DIR}" "${addr}" "${TYPE}"
    fi
    echo -e "\n+-----------------------------------------------------------------+\n"
    echo -e "Nettoyage...\n"
@@ -259,7 +259,7 @@ appel_script_modif () {
    rm -f ./data.yaml
    #rm -f $path_SRV/mesh_central.json
    backup_fichiers
-   ./creation_mesh.py "${DIR}"
+   ./creation_meshconfig.py "${DIR}"
    #if ! creation_json ; then
    #   if ! recuperation ; then
    #      die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $DIR.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
