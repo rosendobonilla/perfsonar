@@ -43,6 +43,10 @@ for fich in sites:
 #On ferme le bloque
 file.write("</organization>\n\n")
 
+for line in open("../conf/body-1-orgs.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
+    file.write(line)
+file.write("\n")
+
 #On commence la partie des groupes
 file.write("<group obas_interne_mesh>\n")                                            #On utilise la meme methode pour obtenir les informations : dans ce cas, on parcours l'arborescence en cherchant les
 file.write("   type mesh\n")                                                         #les membres du groupe mesh et les écrit dans le fichier
@@ -62,7 +66,7 @@ for tipo in types:                                                              
 
 file.write("</group>\n\n")
 
-for line in open("../conf/body.cfg").readlines():                                    #À la fin, on récupère les parties 'constantes' (les tests, etc)
+for line in open("../conf/body-2-fin.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
     file.write(line)
 
 print "\nConfiguration complète"
