@@ -187,7 +187,7 @@ active_tests () {
        done
   done
 
-  tests_disj=$(whiptail --title "Tests Groupe EXTERIEUR - DISJOINT" --checklist "\nPar défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+  tests_disj=$(whiptail --title "Tests Groupe EXTERIEUR - DISJOINT" --checklist --separate-output "\nPar défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 }
 
 
