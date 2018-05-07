@@ -7,7 +7,7 @@
 
 
 ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE=""
-bold=$(tput bold) ; normal=$(tput sgr0) ; italic=$(tput sitm) ; under=$(tput smul)
+bold=$(tput bold) ; normal=$(tput sgr0) ; italic=$(tput sitm) ; under=$(tput smul) ; tests_mesh="" ; tests_disj=""
 
 arborescence () {
   echo """
@@ -49,13 +49,14 @@ EXAMPLE DES FICHIERS REQUIS PAR LE SCRIPT ET DE L'ARBORESCENCE DU REPERTOIRE
 aide()
 {
     echo ""
-    echo "${bold}USAGE${normal}       : $0 ${italic}--action=[list,add,delete] --dir=[répertoire] [-h] [--help]" 1>&2
+    echo "${bold}USAGE${normal}       : $0 ${italic}--action=[list,add,delete,conftest] --dir=[répertoire] [-h] [--help]" 1>&2
     echo ""
     echo "${normal}${bold}--action${normal}    : spécifie quelle type de tache on veut réaliser."
     echo ""
     echo "       ${under}list${normal} : affiche la liste des sondes définies dans le fichier meshconfig"
     echo "        ${under}add${normal} : permet d'ajouter une nouvelle sonde"
     echo "     ${under}delete${normal} : permet de supprimer une sonde"
+    echo "   ${under}conftest${normal} : permet modifier les relations entre les groupes et les tests"
     echo ""
     echo "${bold}--dir${normal}       : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
     echo "${bold}-h, --help${normal}  : usage."
@@ -151,7 +152,7 @@ active_tests () {
       fi
   done < $DIR/tests/actives/active.cfg
   i=0
-  DIR="/home/rosendo/Documents/mesh"
+
   for file in $(ls -p $DIR/tests/ | grep -v /) ; do
     tests[i]=$(echo ${file%.*}) ; (( i++ ))
     tests[i]="" ; (( i++ ))
@@ -167,12 +168,10 @@ active_tests () {
        done
   done
 
-  test_ac=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist "Par défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
-
-  echo "Test selectionés : ${test_ac[0]}"
+  tests_mesh=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist --separate-output "\nPar défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 
   i=0
-  DIR="/home/rosendo/Documents/mesh"
+
   for file in $(ls -p $DIR/tests/ | grep -v /) ; do
     tests[i]=$(echo ${file%.*}) ; (( i++ ))
     tests[i]="" ; (( i++ ))
@@ -188,9 +187,7 @@ active_tests () {
        done
   done
 
-  test_ac=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist "Par défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
-
-  echo "Test selectionés : $test_ac"
+  tests_disj=$(whiptail --title "Tests Groupe EXTERIEUR - DISJOINT" --checklist "\nPar défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 }
 
 
@@ -373,7 +370,7 @@ tache_sup_sonde () {
     rm -f $lienS ; rm -f "$DIR/sites/$sonde_sup.cfg"                                     #Si l'utilisateur confirme la suppression on ecrase le lien symbolique et le site
     echo "Mise à jour de la nouvelle configuration ..."
     backup_fichiers                                                                      #On sauvegarde le fichier meshconfig actuel
-    ./creation_mesh.py "${DIR}"                                                          #On crée un nouveau meshconfig
+    ./creation_meshconfig.py "${DIR}"                                                          #On crée un nouveau meshconfig
     echo "La sonde a été bien supprimée."
   else
     echo "La sonde n'a pas été supprimée."
@@ -460,6 +457,7 @@ elif [ $ACTION == "delete" ] ; then
 elif [ $ACTION == "conftest" ] ; then
     whiptail --title "Manage tests" --msgbox "Normalement, cette partie est déjà configurée. Modifiez si besoin." 8 78
     active_tests
+    ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}"
 else
     aide
 fi

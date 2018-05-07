@@ -15,7 +15,13 @@ import glob
 
 #On récupère le chemin du répertoire MESH grace au script BASH
 reper = sys.argv[1]
+if len(sys.argv) == 4:
+    TESTS1 = sys.argv[2]
+    TESTS2 = sys.argv[3]
+
 nomFich = reper + "/meshconfig.conf"
+testsMesh = TESTS1.split('\n')
+testsDisj = TESTS2.split('\n')
 
 #Variable contenant l'entete du fichier meshconfig
 entete = """description PerfSONAR Observatoire Mesh Config
@@ -74,8 +80,22 @@ for tipo in types:                                                              
 
 file.write("</group>\n\n")
 
-for line in open("../conf/body-2-fin.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
-    file.write(line)
+#for line in open("../conf/body-2-fin.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
+#    file.write(line)
+
+for test in testsMesh:
+    file.write("<test>\n")
+    file.write("   description\n")
+    file.write("   group    obas_interne_mesh\n")
+    file.write("   test_spec    " + test + "\n")
+    file.write("</test>\n\n")
+
+for test in testsDisj:
+    file.write("<test>\n")
+    file.write("   description\n")
+    file.write("   group    obas_exterieur_disjoint\n")
+    file.write("   test_spec    " + test + "\n")
+    file.write("</test>\n\n")
 
 print "\nConfiguration complète"
 
