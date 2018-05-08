@@ -83,6 +83,9 @@ file.write("</group>\n\n")
 #for line in open("../conf/body-2-fin.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
 #    file.write(line)
 
+#Partie a modifier, optimiser
+#Ajouter la modif du fichier active.cfg pour y rajouter les tests selectionnes
+
 for test in testsMesh:
     file.write("<test>\n")
     file.write("   description\n")
