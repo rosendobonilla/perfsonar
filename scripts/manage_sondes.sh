@@ -439,7 +439,7 @@ elif [ $ACTION == "add" ] ; then
     fi
 
     if ! creation_data_yaml ; then
-       die "Erreur inconnue." 1
+       die "Erreur produite peut-être à cause d'un probleme de droits sur le répertoire courant." 1
     fi
 
     if ! appel_script_modif ; then
