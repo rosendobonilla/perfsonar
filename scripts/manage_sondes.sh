@@ -130,6 +130,8 @@ fichiers_script_presents () {
    return 0
 }
 
+#Cette function permet de activer les cases du checklist selon le fichier actives.cfg
+
 sel_items_checklist () {
   declare -a listeArg=("${!1}")
 
