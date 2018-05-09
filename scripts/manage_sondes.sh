@@ -380,6 +380,12 @@ tache_sup_sonde () {
   return 0
 }
 
+apercu () {
+  echo  -e "Maintenant un apercu du nouveau fichier meshconfig. "
+  read -n 1 -s -r -p "Appuyez sur une touche pour continuer : "
+  less $DIR/meshconfig.conf
+}
+
 #Valider les arguments passés en paramètre
 
 while [ "$1" != "" ]; do
@@ -432,6 +438,7 @@ fi
 
 if [ $ACTION == "list" ] ; then
     tache_list
+    apercu
 elif [ $ACTION == "add" ] ; then
     echo "TACHE AJOUTER UN SONDE"
     if ! information ; then
@@ -446,6 +453,7 @@ elif [ $ACTION == "add" ] ; then
        die "Un erreur s'est produite pendant l'exécution de l'appel au script de modification du fichier JSON." 1
     fi
 
+    apercu
     #if ! redemarrer_serv_perfsonar ; then
     #   die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
     #else
@@ -454,11 +462,14 @@ elif [ $ACTION == "add" ] ; then
 elif [ $ACTION == "delete" ] ; then
     echo "TACHE SUPRIMER UN SONDE"
     if ! tache_sup_sonde ; then die "Vous devez choisir la sonde à supprimer" 1 ; fi
+    apercu
 elif [ $ACTION == "conftest" ] ; then
     whiptail --title "Manage tests" --msgbox "Normalement, cette partie est déjà configurée. Modifiez si besoin." 8 78
     active_tests
     ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}"
+    apercu
 else
     aide
 fi
+
 exit 0
