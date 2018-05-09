@@ -20,7 +20,6 @@ import glob
 #modif = 1 ou 0, 1 si on a lance directement l'action 'conftest' et 0 si on vient des taches 'add' ou 'delete' sonde
 def test (liste,groupe,title,modif):
     for test in liste:
-        print test
         cmd = 'echo "' + groupe + ',' + test + '" >> ' + reperTests
         os.system(cmd)
         file.write("<test>\n")
