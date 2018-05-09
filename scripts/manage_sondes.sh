@@ -139,6 +139,14 @@ ver_fichier_conf () {
 #     fi
 # done
 
+reset_checklist () {
+  for file in $(ls -p $DIR/tests/ | grep -v /) ; do
+    tests[i]=$(echo ${file%.*}) ; (( i++ ))
+    tests[i]="" ; (( i++ ))
+    tests[i]="OFF" ; (( i++ ))
+  done
+}
+
 active_tests () {
   i=0 ; ind=0
   while IFS='' read -r linea || [[ -n "$linea" ]]; do
@@ -153,11 +161,7 @@ active_tests () {
   done < $DIR/tests/actives/actives.cfg
   i=0
 
-  for file in $(ls -p $DIR/tests/ | grep -v /) ; do
-    tests[i]=$(echo ${file%.*}) ; (( i++ ))
-    tests[i]="" ; (( i++ ))
-    tests[i]="OFF" ; (( i++ ))
-  done
+  reset_checklist
 
   for i in $(seq 0 ${#tests[@]}) ; do
         for val in "${mesh[@]}" ; do
@@ -168,15 +172,11 @@ active_tests () {
        done
   done
 
-  tests_mesh=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist --separate-output "\nPar défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+  tests_mesh=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist --separate-output "\nPar défaut, les tests qui tournent pour ce groupe sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 
   i=0
 
-  for file in $(ls -p $DIR/tests/ | grep -v /) ; do
-    tests[i]=$(echo ${file%.*}) ; (( i++ ))
-    tests[i]="" ; (( i++ ))
-    tests[i]="OFF" ; (( i++ ))
-  done
+  reset_checklist
 
   for i in $(seq 0 ${#tests[@]}) ; do
         for val in "${disj[@]}" ; do
@@ -187,7 +187,7 @@ active_tests () {
        done
   done
 
-  tests_disj=$(whiptail --title "Tests Groupe EXTERIEUR - DISJOINT" --checklist --separate-output "\nPar défaut, les tests qui tournent sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+  tests_disj=$(whiptail --title "Tests Groupe EXTERIEUR - DISJOINT" --checklist --separate-output "\nPar défaut, les tests qui tournent pour ce groupe sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 }
 
 

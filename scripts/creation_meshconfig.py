@@ -47,7 +47,7 @@ for fich in sites:
 #On ferme le bloque
 file.write("</organization>\n\n")
 
-for line in open("../conf/body-1-orgs.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
+for line in open("../conf/body-orgs.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
     file.write(line)
 file.write("\n")
 
