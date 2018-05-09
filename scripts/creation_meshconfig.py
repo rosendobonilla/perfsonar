@@ -47,7 +47,7 @@ if len(sys.argv) == 5:
     modif = 1
 else:
     modif = 0
-    for line in open(reper + "/tests/actives/actives.cfg").readlines():                                              #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
+    for line in open(reper + "/tests/actives/actives.cfg").readlines():         #On lit le fichier active.cfg pour recuperer les tests selectionés dans deux listes
         lin = line.rstrip('\n').split(',')
         if lin[0] == "obas_interne_mesh":
             testsMesh.append(lin[1])
@@ -62,36 +62,36 @@ entete = """description PerfSONAR Observatoire Mesh Config
 
 """
 
-file = open(nomFich,"wb")                                                            #On crée le nouveau fichier de configuration dans le chemin spécifié
+file = open(nomFich,"wb")                                                       #On crée le nouveau fichier de configuration dans le chemin spécifié
 
 #L'entete va etre toujours la meme, on le met donc en dur dans le fichier
 file.write(entete)
 
 
-sites = glob.glob(reper + '/sites/*.cfg')                                            #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau                                                                    #Trier le tableau pour avoir en premier lieu les members 'a'
+sites = glob.glob(reper + '/sites/*.cfg')                                       #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau                                                                    #Trier le tableau pour avoir en premier lieu les members 'a'
 
 #On parcours le tableau
 for fich in sites:
-    for line in open(fich).readlines():                                              #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
+    for line in open(fich).readlines():                                         #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
         file.write(line)
 
 #On ferme le bloque
 file.write("</organization>\n\n")
 
-for line in open("../conf/body-orgs.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
+for line in open("../conf/body-orgs.cfg").readlines():                          #Là, on récupère la partie 'fixe' (les orgs)
     file.write(line)
 file.write("\n")
 
-tests = glob.glob('../conf/test/*.cfg')                                            #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau                                                                    #Trier le tableau pour avoir en premier lieu les members 'a'
+tests = glob.glob('../conf/test/*.cfg')                                         #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau                                                                    #Trier le tableau pour avoir en premier lieu les members 'a'
 
 for fich in tests:
-    for line in open(fich).readlines():                                              #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
+    for line in open(fich).readlines():                                         #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
         file.write(line)
     file.write("\n")
 
 #On commence la partie des groupes
-file.write("<group obas_interne_mesh>\n")                                            #On utilise la meme methode pour obtenir les informations : dans ce cas, on parcours l'arborescence en cherchant les
-file.write("   type mesh\n")                                                         #les membres du groupe mesh et les écrit dans le fichier
+file.write("<group obas_interne_mesh>\n")                                       #On utilise la meme methode pour obtenir les informations : dans ce cas, on parcours l'arborescence en cherchant les
+file.write("   type mesh\n")                                                    #les membres du groupe mesh et les écrit dans le fichier
 for mem in glob.glob(reper + "/groupes/mesh/*"):
     dirname, filename = os.path.split(mem)
     file.write("\n   member " + filename)
@@ -100,11 +100,11 @@ file.write("\n</group>")
 file.write("\n\n<group obas_exterieur_disjoint>\n")
 file.write("   type disjoint\n\n")
 
-types = [os.path.basename(x) for x in glob.glob(reper + "/groupes/disjoint/*")]      #Cas particulier pour le groupe 'disjoint' ; d'abord on obtient les types (a ou b)
+types = [os.path.basename(x) for x in glob.glob(reper + "/groupes/disjoint/*")] #Cas particulier pour le groupe 'disjoint' ; d'abord on obtient les types (a ou b)
 types.sort()
 
-for tipo in types:                                                                   #On utilise la meme methode pour obtenir les informations : dans ce cas, on parcours l'arborescence en cherchant les
-    for mem in glob.glob(reper + "/groupes/disjoint/" + tipo + "/*"):                #les membres du groupe disjoint et les écrit dans le fichier
+for tipo in types:                                                              #On utilise la meme methode pour obtenir les informations : dans ce cas, on parcours l'arborescence en cherchant les
+    for mem in glob.glob(reper + "/groupes/disjoint/" + tipo + "/*"):           #les membres du groupe disjoint et les écrit dans le fichier
         dirname, filename = os.path.split(mem)
         file.write("   " + tipo + " " + filename + "\n")
     file.write("\n")
@@ -123,6 +123,6 @@ else:
     test(testsMesh,"obas_interne_mesh","INTERNE",0)
     test(testsDisj,"obas_exterieur_disjoint","EXTERIEUR",0)
 
-print "\nConfiguration complète"
+print "\nConfiguration complète !\n"
 
 file.close

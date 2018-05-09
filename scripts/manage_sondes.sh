@@ -292,7 +292,7 @@ recuperer_logs () {
 
 #Appel aux scripts en Python qui feront toutes les modifications dans les fichiers correspondants
 
-appel_script_modif () {
+tache_add () {
    echo -e "\nAppel au script de modification du fichier mesh config : $DIR ..."
 
    #Cette partie permet  d'envoyer les paramètres selon le type de groupe, le groupe disjoint nécessite d'un paramètre en plus
@@ -301,9 +301,6 @@ appel_script_modif () {
    else
       ./sonde_conf.py "${DIR}" "${addr}" "${TYPE}"
    fi
-   echo -e "\n+-----------------------------------------------------------------+\n"
-   echo -e "Nettoyage...\n"
-   echo -e "\n+-----------------------------------------------------------------+\n"
    rm -f ./data.yaml
    #rm -f $path_SRV/mesh_central.json
    backup_fichiers
@@ -427,7 +424,7 @@ elif [ $ACTION == "add" ] ; then
        die "Erreur produite peut-être à cause d'un probleme de droits sur le répertoire courant." 1
     fi
 
-    if ! appel_script_modif ; then
+    if ! tache_add ; then
        die "Un erreur s'est produite pendant l'exécution de l'appel au script de modification du fichier JSON." 1
     fi
     apercu
