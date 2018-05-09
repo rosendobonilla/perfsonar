@@ -476,7 +476,7 @@ elif [ $ACTION == "delete" ] ; then
 elif [ $ACTION == "conftest" ] ; then
     whiptail --title "Manage tests" --msgbox "Normalement, cette partie est déjà configurée. Modifiez si besoin." 8 78
     active_tests
-    ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}"
+    ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}" "1"
     apercu
 else
     aide

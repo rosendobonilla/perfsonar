@@ -13,15 +13,47 @@ import yaml
 import sys
 import glob
 
+#Cette function va creer tous les tests en fonction des paramètres passés
+#liste = array testsDisj ou testsMesh contenant les test passes pour le script bash
+#groupe = le groupe relie au test
+#title = INTERNE ou EXTERIEUR cest juste pour l'affichage
+#modif = 1 ou 0, 1 si on a lance directement l'action 'conftest' et 0 si on vient des taches 'add' ou 'delete' sonde
+def test (liste,groupe,title,modif):
+    for test in liste:
+        print test
+        cmd = 'echo "' + groupe + ',' + test + '" >> ' + reperTests
+        os.system(cmd)
+        file.write("<test>\n")
+        if modif == 1:
+            descrip = raw_input("GROUPE " + title + " : Entrez une description pour le test : " + test + " - ")
+        else:
+            descrip = groupe
+        file.write("   description    " + descrip + "\n")
+        file.write("   group    " + groupe + "\n")
+        file.write("   test_spec    " + test + "\n")
+        file.write("</test>\n\n")
+
+testsMesh = []
+testsDisj = []
+
 #On récupère le chemin du répertoire MESH grace au script BASH
 reper = sys.argv[1]
-if len(sys.argv) == 4:
+nomFich = reper + "/meshconfig.conf"
+
+if len(sys.argv) == 5:
     TESTS1 = sys.argv[2]
     TESTS2 = sys.argv[3]
-
-nomFich = reper + "/meshconfig.conf"
-testsMesh = TESTS1.split('\n')
-testsDisj = TESTS2.split('\n')
+    testsMesh = TESTS1.split('\n')
+    testsDisj = TESTS2.split('\n')
+    modif = 1
+else:
+    modif = 0
+    for line in open(reper + "/tests/actives/actives.cfg").readlines():                                              #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
+        lin = line.rstrip('\n').split(',')
+        if lin[0] == "obas_interne_mesh":
+            testsMesh.append(lin[1])
+        else:
+            testsDisj.append(lin[1])
 
 #Variable contenant l'entete du fichier meshconfig
 entete = """description PerfSONAR Observatoire Mesh Config
@@ -80,37 +112,17 @@ for tipo in types:                                                              
 
 file.write("</group>\n\n")
 
-#for line in open("../conf/body-2-fin.cfg").readlines():                                    #À la fin, on récupère les parties 'fixes' (les tests, etc)
-#    file.write(line)
-
-#Partie a modifier, optimiser
-#Ajouter la modif du fichier active.cfg pour y rajouter les tests selectionnes
-
 reperTests = reper + '/tests/actives/actives.cfg'
 cmd = 'rm -f ' + reperTests
 os.system(cmd)
 
-print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichés dans le tableau de bord, il faut donc donner des descriptions parlantes.\n"
-
-for test in testsMesh:
-    cmd = 'echo "obas_interne_mesh,' + test + '" >> ' + reperTests
-    os.system(cmd)
-    file.write("<test>\n")
-    descrip = raw_input("GROUPE INTERNE : Entrez une description pour le test : " + test + " - ")
-    file.write("   description    " + descrip + "\n")
-    file.write("   group    obas_interne_mesh\n")
-    file.write("   test_spec    " + test + "\n")
-    file.write("</test>\n\n")
-
-for test in testsDisj:
-    cmd = 'echo "obas_interne_disjoint,' + test + '" >> ' + reperTests
-    os.system(cmd)
-    file.write("<test>\n")
-    descrip = raw_input("GROUPE EXTERIEUR : Entrez une description pour le test : " + test + " - ")
-    file.write("   description    " + descrip + "\n")
-    file.write("   group    obas_exterieur_disjoint\n")
-    file.write("   test_spec    " + test + "\n")
-    file.write("</test>\n\n")
+if modif == 1:
+    print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichés dans le tableau de bord, il faut donc donner des descriptions parlantes.\n"
+    test(testsMesh,"obas_interne_mesh","INTERNE",1)
+    test(testsDisj,"obas_exterieur_disjoint","EXTERIEUR",1)
+else:
+    test(testsMesh,"obas_interne_mesh","INTERNE",0)
+    test(testsDisj,"obas_exterieur_disjoint","EXTERIEUR",0)
 
 print "\nConfiguration complète"
 
