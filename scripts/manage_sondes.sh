@@ -123,21 +123,11 @@ fichiers_script_presents () {
    if [ ! -f "./creation_meshconfig.py" ] || [ ! -f "./template.jinja2" ] || [ ! -f "./sonde_conf.py" ] ; then
       return 1
    fi
-   if [ ! -d "$DIR/sites" ] || [ ! -d "$DIR/backup" ] || [ ! -d "$DIR/groupes" ] || [ ! -f "$DIR/meshconfig.conf" ]  ; then
+   if [ ! -d "$DIR/sites" ] || [ ! -d "$DIR/backup" ] || [ ! -d "$DIR/groupes" ] || [ ! -d "$DIR/tests" ] || [ ! -f "$DIR/meshconfig.conf" ]  ; then
       return 1
    fi
 
    return 0
-}
-
-
-#Vérifier la présence du fichier entré en paramètre
-
-ver_fichier_conf () {
-   if [ -f "$DIR/meshconfig.conf" ]; then
-      return 0
-   fi
-   return 1
 }
 
 sel_items_checklist () {
@@ -423,10 +413,6 @@ fi
 
 if ! fichiers_script_presents ; then
    die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant." 5
-fi
-
-if ! ver_fichier_conf ; then
-   die "Aucun fichier de configuration MESH n'a pas été trouvé dans le chemin indiqué." 1
 fi
 
 if [ $ACTION == "list" ] ; then
