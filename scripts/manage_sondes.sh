@@ -140,22 +140,22 @@ ver_fichier_conf () {
    return 1
 }
 
+sel_items_checklist () {
+  declare -a listeArg=("${!1}")
 
-# for val in "${mesh[@]}" ; do
-#     if [[ ${file%.*} == $val ]] ; then
-#         echo "Val array : $val Val fich : ${file%.*} Valor a ON"
-#         tests[i]="ON"
-#     else
-#       tests[i]="OFF"
-#       echo "Valor a OFF de $file"
-#     fi
-# done
-
-reset_checklist () {
   for file in $(ls -p $DIR/tests/ | grep -v /) ; do
     tests[i]=$(echo ${file%.*}) ; (( i++ ))
     tests[i]="" ; (( i++ ))
     tests[i]="OFF" ; (( i++ ))
+  done
+
+  for i in $(seq 0 ${#tests[@]}) ; do
+        for val in "${listeArg[@]}" ; do
+            if [[ ${tests[i]} == $val ]] ; then
+                ac=$i+2
+                tests[ac]="ON"
+            fi
+       done
   done
 }
 
@@ -173,35 +173,16 @@ active_tests () {
   done < $DIR/tests/actives/actives.cfg
   i=0
 
-  reset_checklist
-
-  for i in $(seq 0 ${#tests[@]}) ; do
-        for val in "${mesh[@]}" ; do
-            if [[ ${tests[i]} == $val ]] ; then
-                ac=$i+2
-                tests[ac]="ON"
-            fi
-       done
-  done
+  sel_items_checklist mesh[@]
 
   tests_mesh=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist --separate-output "\nPar défaut, les tests qui tournent pour ce groupe sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 
   i=0
 
-  reset_checklist
-
-  for i in $(seq 0 ${#tests[@]}) ; do
-        for val in "${disj[@]}" ; do
-            if [[ ${tests[i]} == $val ]] ; then
-                ac=$i+2
-                tests[ac]="ON"
-            fi
-       done
-  done
+  sel_items_checklist disj[@]
 
   tests_disj=$(whiptail --title "Tests Groupe EXTERIEUR - DISJOINT" --checklist --separate-output "\nPar défaut, les tests qui tournent pour ce groupe sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
 }
-
 
 #Demander les informations concernant la sonde
 
