@@ -90,11 +90,14 @@ reperTests = reper + '/tests/actives/actives.cfg'
 cmd = 'rm -f ' + reperTests
 os.system(cmd)
 
+print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichés dans le tableau de bord, il faut donc donner des descriptions parlants.\n"
+
 for test in testsMesh:
     cmd = 'echo "obas_interne_mesh,' + test + '" >> ' + reperTests
     os.system(cmd)
     file.write("<test>\n")
-    file.write("   description\n")
+    descrip = raw_input("GROUPE INTERNE : Entrez une description pour le test : " + test + " - ")
+    file.write("   description    " + descrip + "\n")
     file.write("   group    obas_interne_mesh\n")
     file.write("   test_spec    " + test + "\n")
     file.write("</test>\n\n")
@@ -103,7 +106,8 @@ for test in testsDisj:
     cmd = 'echo "obas_interne_disjoint,' + test + '" >> ' + reperTests
     os.system(cmd)
     file.write("<test>\n")
-    file.write("   description\n")
+    descrip = raw_input("GROUPE EXTERIEUR : Entrez une description pour le test : " + test + " - ")
+    file.write("   description    " + descrip + "\n")
     file.write("   group    obas_exterieur_disjoint\n")
     file.write("   test_spec    " + test + "\n")
     file.write("</test>\n\n")
