@@ -13,11 +13,15 @@ arborescence () {
   echo """
 EXAMPLE DES FICHIERS REQUIS PAR LE SCRIPT ET DE L'ARBORESCENCE DU REPERTOIRE
 
+REPERTOIRE SCRIPT
+
 .
-├── add_sonde-2.0.sh
-├── creation_mesh.py
-├── maj_meshconfig.py
+├── manage_sonde.sh
+├── creation_meshconfig.py
+├── sonde_conf.py
 └── template.jinja2
+
+REPERTOIRE MESHCONFIG
 
 ../mesh
 ├── backup
@@ -35,13 +39,21 @@ EXAMPLE DES FICHIERS REQUIS PAR LE SCRIPT ET DE L'ARBORESCENCE DU REPERTOIRE
 │       ├── can.ops.fr -> ../mesh/sites/can.ops.fr.cfg
 │       └── ops.est.fr -> ../mesh/sites/ops.est.fr.cfg
 ├── meshconfig.conf
-└── sites
-    ├── arg.fr.cfg
-    ├── can.ops.fr.cfg
-    ├── col.fr.cfg
-    ├── mar.fr.cfg
-    ├── mex.fr.cfg
-    └── ops.est.fr.cfg
+├── sites
+│    ├── arg.fr.cfg
+│    ├── can.ops.fr.cfg
+│    ├── col.fr.cfg
+│    ├── mar.fr.cfg
+│    ├── mex.fr.cfg
+│    └── ops.est.fr.cfg
+└── tests
+    ├── actives
+    │   └── actives.cfg
+    ├── test_bw_tcp.cfg
+    ├── test_bw_udp.cfg
+    ├── test_latence.cfg
+    ├── test_ping.cfg
+    └── test_traceroute.cfg
 
 """
 }
@@ -452,7 +464,6 @@ elif [ $ACTION == "add" ] ; then
     if ! appel_script_modif ; then
        die "Un erreur s'est produite pendant l'exécution de l'appel au script de modification du fichier JSON." 1
     fi
-
     apercu
     #if ! redemarrer_serv_perfsonar ; then
     #   die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
