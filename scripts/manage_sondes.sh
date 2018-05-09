@@ -147,10 +147,10 @@ active_tests () {
           mesh[i]=${div[1]}
           (( i++ ))
       else
-          disj[i]=${div[1]}
+          disj[ind]=${div[1]}
           (( ind++ ))
       fi
-  done < $DIR/tests/actives/active.cfg
+  done < $DIR/tests/actives/actives.cfg
   i=0
 
   for file in $(ls -p $DIR/tests/ | grep -v /) ; do

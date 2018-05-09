@@ -86,7 +86,13 @@ file.write("</group>\n\n")
 #Partie a modifier, optimiser
 #Ajouter la modif du fichier active.cfg pour y rajouter les tests selectionnes
 
+reperTests = reper + '/tests/actives/actives.cfg'
+cmd = 'rm -f ' + reperTests
+os.system(cmd)
+
 for test in testsMesh:
+    cmd = 'echo "obas_interne_mesh,' + test + '" >> ' + reperTests
+    os.system(cmd)
     file.write("<test>\n")
     file.write("   description\n")
     file.write("   group    obas_interne_mesh\n")
@@ -94,6 +100,8 @@ for test in testsMesh:
     file.write("</test>\n\n")
 
 for test in testsDisj:
+    cmd = 'echo "obas_interne_disjoint,' + test + '" >> ' + reperTests
+    os.system(cmd)
     file.write("<test>\n")
     file.write("   description\n")
     file.write("   group    obas_exterieur_disjoint\n")
