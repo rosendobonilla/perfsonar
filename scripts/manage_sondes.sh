@@ -68,7 +68,7 @@ aide()
     echo "       ${under}list${normal} : affiche la liste des sondes définies dans le fichier meshconfig"
     echo "        ${under}add${normal} : permet d'ajouter une nouvelle sonde"
     echo "     ${under}delete${normal} : permet de supprimer une sonde"
-    echo "   ${under}conftest${normal} : permet modifier les relations entre les groupes et les tests"
+    echo "   ${under}conftest${normal} : permet de modifier les relations entre les groupes et les tests"
     echo ""
     echo "${bold}--dir${normal}       : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
     echo "${bold}-h, --help${normal}  : usage."
@@ -450,7 +450,6 @@ fi
 
 if [ $ACTION == "list" ] ; then
     tache_list
-    apercu
 elif [ $ACTION == "add" ] ; then
     echo "TACHE AJOUTER UN SONDE"
     if ! information ; then

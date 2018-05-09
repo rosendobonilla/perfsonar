@@ -90,7 +90,7 @@ reperTests = reper + '/tests/actives/actives.cfg'
 cmd = 'rm -f ' + reperTests
 os.system(cmd)
 
-print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichés dans le tableau de bord, il faut donc donner des descriptions parlants.\n"
+print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichés dans le tableau de bord, il faut donc donner des descriptions parlantes.\n"
 
 for test in testsMesh:
     cmd = 'echo "obas_interne_mesh,' + test + '" >> ' + reperTests
