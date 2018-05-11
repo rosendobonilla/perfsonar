@@ -172,6 +172,7 @@ active_tests () {
 
   tests_mesh=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist --separate-output "\nPar défaut, les tests qui tournent pour ce groupe sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
   if [ $? = 1 ] || [[ $tests_mesh == "" ]] ; then die "Tache interrompue." 1 ; fi
+  
   i=0
 
   sel_items_checklist disj[@]
@@ -503,11 +504,13 @@ elif [ $ACTION == "delete" ] ; then
 elif [ $ACTION == "conftest" ] ; then
   if (whiptail --title "Manage tests" --yesno --no-button "Avancée" --yes-button "Suivant" "Normalement, cette partie est déjà configurée. SUIVANT si vous voulez activer ou desactiver des tests. AVANCÉE pour modifier les paramètres des tests." 10 78) then
     active_tests
+    #  ./creation_meshconfig.py "${DIR}" "1" Juste le parametre pour savoir s'il sagit de la tache conftes
     ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}" "1"
     apercu
   else
     echo "Paramètres avancés"
     tache_avancee
+    # ./creation_meshconfig.py "${DIR}" Juste le parametre DIR tache conf avancee =~ add/delete
     ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}"
   fi
   if ! creation_json ; then

@@ -32,27 +32,32 @@ def test (liste,groupe,title,modif):
         file.write("   test_spec    " + test + "\n")
         file.write("</test>\n\n")
 
-testsMesh = []
-testsDisj = []
+testsMeshCourants = []
+testsDisjCourants = []
 
 #On récupère le chemin du répertoire MESH grace au script BASH
 reper = sys.argv[1]
 nomFich = reper + "/meshconfig.conf"
 
+#if len(sys.argv) == 3:
 if len(sys.argv) == 5:
+    #Supp
     TESTS1 = sys.argv[2]
     TESTS2 = sys.argv[3]
-    testsMesh = TESTS1.split('\n')
-    testsDisj = TESTS2.split('\n')
+    testsMeshNew = TESTS1.split('\n')
+    testsDisjNew = TESTS2.split('\n')
+    #
     modif = 1
 else:
     modif = 0
+    #Convertir a function et inclure la description
     for line in open(reper + "/tests/actives/actives.cfg").readlines():         #On lit le fichier active.cfg pour recuperer les tests selectionés dans deux listes
         lin = line.rstrip('\n').split(',')
         if lin[0] == "obas_interne_mesh":
-            testsMesh.append(lin[1])
+            #testsMeshCourants[lin[1]] = lin[2]
+            testsMeshCourants.append(lin[1])
         else:
-            testsDisj.append(lin[1])
+            testsDisjCourants.append(lin[1])
 
 #Variable contenant l'entete du fichier meshconfig
 entete = """description PerfSONAR Observatoire Mesh Config
@@ -117,11 +122,11 @@ os.system(cmd)
 
 if modif == 1:
     print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichées dans le tableau de bord, il faut donc donner des descriptions adaptées.\n"
-    test(testsMesh,"obas_interne_mesh","INTERNE",1)
-    test(testsDisj,"obas_exterieur_disjoint","EXTERIEUR",1)
+    test(testsMeshNew,"obas_interne_mesh","INTERNE",1)
+    test(testsDisjNew,"obas_exterieur_disjoint","EXTERIEUR",1)
 else:
-    test(testsMesh,"obas_interne_mesh","INTERNE",0)
-    test(testsDisj,"obas_exterieur_disjoint","EXTERIEUR",0)
+    test(testsMeshCourants,"obas_interne_mesh","INTERNE",0)
+    test(testsDisjCourants,"obas_exterieur_disjoint","EXTERIEUR",0)
 
 print "\nConfiguration complète !\n"
 
