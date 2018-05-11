@@ -376,19 +376,21 @@ lister_param () {
 }
 
 tache_avancee () {
+    repAc=$(pwd)
     whiptail --title "Manage tests" --yesno --yes-button "Continuer" --no-button "Annuler" "Dans cette partie, vous pouvez modifier les paramétres de chaque test." 8 78
     if [ $? = 1 ] ; then die "Tache interrempue." 1 ; fi
     lister_tests
     select=$(whiptail --title "Tests trouvés" --radiolist --separate-output "\nChoisissez le test à modifier" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+    pathSelect="$DIR/tests/$select.cfg"
     if [ $? = 1 ] ; then die "Tache interrempue." 1 ; fi
     x=0
-    for i in $(grep -E -v ">$" $DIR/tests/$select.cfg | cut -d" " -f1) ; do
+    for i in $(grep -E -v ">$" $pathSelect | cut -d" " -f1) ; do
        param[x]=$i ;  (( x++ ))
     done
 
     i=0
     for par in "${param[@]}" ; do
-      val=$(grep "$par" $DIR/tests/$select.cfg | cut -d" " -f2)
+      val=$(grep -E "^$par" $pathSelect | cut -d" " -f2)
       params[i]=$par ; (( i++ ))
       params[i]="= $val" ; (( i++ ))
       params[i]="OFF" ; (( i++ ))
@@ -397,12 +399,14 @@ tache_avancee () {
     if [ $? = 1 ] ; then die "Tache interrempue." 1 ; fi
     psAr=(${ps//" "/ })
 
+    cd $DIR/tests/
     for i in "${psAr[@]}" ; do
-      valAc=$(grep "$i" $DIR/tests/$select.cfg | cut -d" " -f2)
+      valAc=$(grep -E "^$i" $select.cfg | cut -d" " -f2)
       val=$(whiptail --inputbox "\nEntrez le nouveau valeur pour '$i'" 8 78 $valAc --title "Modifier paramètre du test '$select'" 3>&1 1>&2 2>&3)
       if [ $? = 1 ] ; then die "Tache interrempue." 1 ; fi
-      echo $val
+      sed -i "/$i $valAc/ c \\$i $val" "$select.cfg"
     done
+    cd $repAc
 }
 
 apercu () {
