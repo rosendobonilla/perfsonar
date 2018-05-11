@@ -130,16 +130,19 @@ fichiers_script_presents () {
    return 0
 }
 
-#Cette function permet de activer les cases du checklist selon le fichier actives.cfg
-
-sel_items_checklist () {
-  declare -a listeArg=("${!1}")
-
+lister_tests () {
   for file in $(ls -p $DIR/tests/ | grep -v /) ; do
     tests[i]=$(echo ${file%.*}) ; (( i++ ))
     tests[i]="" ; (( i++ ))
     tests[i]="OFF" ; (( i++ ))
   done
+}
+#Cette function permet de activer les cases du checklist selon le fichier actives.cfg
+
+sel_items_checklist () {
+  declare -a listeArg=("${!1}")
+
+  lister_tests
 
   for i in $(seq 0 ${#tests[@]}) ; do
         for val in "${listeArg[@]}" ; do
@@ -362,6 +365,42 @@ tache_sup_sonde () {
   return 0
 }
 
+lister_param () {
+  declare -a listeArg=("${!1}")
+
+  for file in $(ls -p $DIR/tests/ | grep -v /) ; do
+    tests[i]=$(echo ${file%.*}) ; (( i++ ))
+    tests[i]="" ; (( i++ ))
+    tests[i]="OFF" ; (( i++ ))
+  done
+}
+
+tache_avancee () {
+    whiptail --title "Manage tests" --msgbox "Dans cette partie, vous pouvez modifier les paramétres principaux de chaque test." 8 78
+    lister_tests
+    select=$(whiptail --title "Tests trouvés" --radiolist --separate-output "\nChoisissez le test à modifier" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+    x=0
+    for i in $(grep -E -v ">$" $DIR/tests/$select.cfg | cut -d" " -f1) ; do
+       param[x]=$i ;  (( x++ ))
+    done
+
+    i=0
+    for par in "${param[@]}" ; do
+      val=$(grep "$par" $DIR/tests/$select.cfg | cut -d" " -f2)
+      params[i]=$par ; (( i++ ))
+      params[i]="= $val" ; (( i++ ))
+      params[i]="OFF" ; (( i++ ))
+    done
+    ps=$(whiptail --title "Liste de paramètres" --checklist --separate-output "\nChoisissez les paramètres à modifier" 25 78 16 "${params[@]}" 3>&1 1>&2 2>&3)
+    psAr=(${ps//" "/ })
+
+    for i in "${psAr[@]}" ; do
+      valAc=$(grep "$i" $DIR/tests/$select.cfg | cut -d" " -f2)
+      val=$(whiptail --inputbox "\nEntrez le nouveau valeur pour '$i'" 8 78 $valAc --title "Modifier paramètre du test '$select'" 3>&1 1>&2 2>&3)
+      echo $val
+    done
+}
+
 apercu () {
   echo  -e "Maintenant un apercu du nouveau fichier meshconfig. "
   read -n 1 -s -r -p "Appuyez sur une touche pour continuer : "
@@ -440,10 +479,15 @@ elif [ $ACTION == "delete" ] ; then
     if ! tache_sup_sonde ; then die "Vous devez choisir la sonde à supprimer" 1 ; fi
     apercu
 elif [ $ACTION == "conftest" ] ; then
-    whiptail --title "Manage tests" --msgbox "Normalement, cette partie est déjà configurée. Modifiez si besoin." 8 78
+  if (whiptail --title "Manage tests" --yesno --no-button "Avancée" --yes-button "Suivant" "Normalement, cette partie est déjà configurée. SUIVANT si vous voulez activer ou desactiver des tests. AVANCÉE pour modifier les paramètres des tests." 10 78) then
     active_tests
     ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}" "1"
     apercu
+  else
+    echo "Paramètres avancés"
+    tache_avancee
+  fi
+
 else
     aide
 fi

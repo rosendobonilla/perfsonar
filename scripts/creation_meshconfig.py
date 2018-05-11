@@ -116,7 +116,7 @@ cmd = 'rm -f ' + reperTests
 os.system(cmd)
 
 if modif == 1:
-    print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichés dans le tableau de bord, il faut donc donner des descriptions parlantes.\n"
+    print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichées dans le tableau de bord, il faut donc donner des descriptions adaptées.\n"
     test(testsMesh,"obas_interne_mesh","INTERNE",1)
     test(testsDisj,"obas_exterieur_disjoint","EXTERIEUR",1)
 else:
