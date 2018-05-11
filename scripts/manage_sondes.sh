@@ -4,7 +4,7 @@
 # Ce script est le script principal, ici on valide toutes les entrées, les erreurs qui peuvent  #
 # apparaitre, les dependences et les appels aux scripts Python                                  #
 #-----------------------------------------------------------------------------------------------#
-
+#Corriger certaines functions
 
 ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE=""
 bold=$(tput bold) ; normal=$(tput sgr0) ; italic=$(tput sitm) ; under=$(tput smul) ; tests_mesh="" ; tests_disj=""
