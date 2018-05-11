@@ -82,7 +82,7 @@ for line in open("../conf/body-orgs.cfg").readlines():                          
     file.write(line)
 file.write("\n")
 
-tests = glob.glob('../conf/test/*.cfg')                                         #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau                                                                    #Trier le tableau pour avoir en premier lieu les members 'a'
+tests = glob.glob(reper + '/tests/*.cfg')                                         #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau                                                                    #Trier le tableau pour avoir en premier lieu les members 'a'
 
 for fich in tests:
     for line in open(fich).readlines():                                         #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
