@@ -376,9 +376,11 @@ lister_param () {
 }
 
 tache_avancee () {
-    whiptail --title "Manage tests" --msgbox "Dans cette partie, vous pouvez modifier les paramétres principaux de chaque test." 8 78
+    whiptail --title "Manage tests" --yesno --yes-button "Continuer" --no-button "Annuler" "Dans cette partie, vous pouvez modifier les paramétres de chaque test." 8 78
+    if [ $? = 1 ] ; then die "Tache interrempue." 1 ; fi
     lister_tests
     select=$(whiptail --title "Tests trouvés" --radiolist --separate-output "\nChoisissez le test à modifier" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+    if [ $? = 1 ] ; then die "Tache interrempue." 1 ; fi
     x=0
     for i in $(grep -E -v ">$" $DIR/tests/$select.cfg | cut -d" " -f1) ; do
        param[x]=$i ;  (( x++ ))
@@ -392,11 +394,13 @@ tache_avancee () {
       params[i]="OFF" ; (( i++ ))
     done
     ps=$(whiptail --title "Liste de paramètres" --checklist --separate-output "\nChoisissez les paramètres à modifier" 25 78 16 "${params[@]}" 3>&1 1>&2 2>&3)
+    if [ $? = 1 ] ; then die "Tache interrempue." 1 ; fi
     psAr=(${ps//" "/ })
 
     for i in "${psAr[@]}" ; do
       valAc=$(grep "$i" $DIR/tests/$select.cfg | cut -d" " -f2)
       val=$(whiptail --inputbox "\nEntrez le nouveau valeur pour '$i'" 8 78 $valAc --title "Modifier paramètre du test '$select'" 3>&1 1>&2 2>&3)
+      if [ $? = 1 ] ; then die "Tache interrempue." 1 ; fi
       echo $val
     done
 }
