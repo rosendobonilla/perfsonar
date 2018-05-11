@@ -172,7 +172,7 @@ active_tests () {
 
   tests_mesh=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist --separate-output "\nPar défaut, les tests qui tournent pour ce groupe sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
   if [ $? = 1 ] || [[ $tests_mesh == "" ]] ; then die "Tache interrompue." 1 ; fi
-  
+
   i=0
 
   sel_items_checklist disj[@]
