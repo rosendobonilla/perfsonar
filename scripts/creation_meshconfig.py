@@ -43,7 +43,6 @@ testsDisjNew = []
 def lister_tests_courants ():
     for line in open(reper + "/tests/actives/actives.cfg").readlines():         #On lit le fichier actives.cfg pour recuperer les tests selectionés dans deux listes
         lin = line.rstrip('\n').split(',')
-        print lin[0]," ",lin[1]," ",lin[2]
         if lin[0] == "obas_interne_mesh":
             #testsMeshCourants[lin[1]] = lin[2]
             testsMeshCourants[lin[1]] = lin[2]
@@ -133,8 +132,8 @@ if modif == 1:
 else:
     testsMesh = testsMeshCourants.keys()
     testsDisj = testsDisjCourants.keys()
-    test(testsMesh,"obas_interne_mesh","INTERNE",0)
-    test(testsDisj,"obas_exterieur_disj","EXTERIEUR",0)
+    test(testsMesh,testsMeshCourants,"obas_interne_mesh","INTERNE",0)
+    test(testsDisj,testsDisjCourants,"obas_exterieur_disj","EXTERIEUR",0)
 
 print "\nConfiguration complète !\n"
 

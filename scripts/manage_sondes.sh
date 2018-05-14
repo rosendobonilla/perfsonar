@@ -61,17 +61,19 @@ REPERTOIRE MESHCONFIG
 aide()
 {
     echo ""
-    echo "${bold}USAGE${normal}       : $0 ${italic}--action=[list,add,delete,conftest] --dir=[répertoire] [-h] [--help]" 1>&2
+    echo "${bold}USAGE${normal}"
+    echo "      $0 ${italic}--action=[list,add,delete,conftest] --dir=[répertoire] [-h] [--help]${normal}" 1>&2
     echo ""
-    echo "${normal}${bold}--action${normal}    : spécifie quelle type de tache on veut réaliser."
+    echo "${bold}ARGS${normal}"
+    echo "${normal}${bold}      --action${normal}      spécifie quelle type de tache on veut réaliser."
     echo ""
-    echo "       ${under}list${normal} : affiche la liste des sondes définies dans le fichier meshconfig"
-    echo "        ${under}add${normal} : permet d'ajouter une nouvelle sonde"
-    echo "     ${under}delete${normal} : permet de supprimer une sonde"
-    echo "   ${under}conftest${normal} : permet de modifier les relations entre les groupes et les tests"
+    echo "          ${under}list${normal}      affiche la liste des sondes définies dans le fichier meshconfig"
+    echo "          ${under}add${normal}       permet d'ajouter une nouvelle sonde"
+    echo "          ${under}delete${normal}    permet de supprimer une sonde"
+    echo "          ${under}conftest${normal}  permet de modifier les relations entre les groupes et les tests"
     echo ""
-    echo "${bold}--dir${normal}       : spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
-    echo "${bold}-h, --help${normal}  : usage."
+    echo "${bold}      --dir${normal}         spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
+    echo "${bold}      -h, --help${normal}    usage."
     echo ""
     echo ""
 }
@@ -375,12 +377,12 @@ lister_param () {
 
 tache_avancee () {
     repAc=$(pwd)
-    whiptail --title "Manage tests" --yesno --yes-button "Continuer" --no-button "Annuler" "Dans cette partie, vous pouvez modifier les paramétres de chaque test." 8 78
+    whiptail --title "Manage tests" --yesno --yes-button "Continuer" --no-button "Annuler" "Dans cette section, vous allez modifier les paramétres de chaque test. Assurez-vous que les nouvelles valeurs sont valides." 8 78
     if [ $? = 1 ] ; then die "Tache interrompue." 1 ; fi
     lister_tests
-    select=$(whiptail --title "Tests trouvés" --radiolist --separate-output "\nChoisissez le test à modifier" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+    select=$(whiptail --title "Tests trouvés" --radiolist --separate-output "\nChoisissez le test à modifier :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+    if [ $? = 1 ] || [[ $select == "" ]] ; then die "Tache interrompue." 1 ; fi
     pathSelect="$DIR/tests/$select.cfg"
-    if [ $? = 1 ] ; then die "Tache interrompue." 1 ; fi
     x=0
     for i in $(grep -E -v ">$" $pathSelect | cut -d" " -f1) ; do
        param[x]=$i ;  (( x++ ))
@@ -393,14 +395,14 @@ tache_avancee () {
       params[i]="= $val" ; (( i++ ))
       params[i]="OFF" ; (( i++ ))
     done
-    ps=$(whiptail --title "Liste de paramètres" --checklist --separate-output "\nChoisissez les paramètres à modifier" 25 78 16 "${params[@]}" 3>&1 1>&2 2>&3)
-    if [ $? = 1 ] ; then die "Tache interrompue." 1 ; fi
+    ps=$(whiptail --title "Liste de paramètres" --checklist --separate-output "\nChoisissez les paramètres à modifier :" 25 78 16 "${params[@]}" 3>&1 1>&2 2>&3)
+    if [ $? = 1 ] || [[ $ps == "" ]] ; then die "Tache interrompue." 1 ; fi
     psAr=(${ps//" "/ })
 
     cd $DIR/tests/
     for i in "${psAr[@]}" ; do
       valAc=$(grep -E "^$i" $select.cfg | cut -d" " -f2)
-      val=$(whiptail --inputbox "\nEntrez le nouveau valeur pour '$i'" 8 78 $valAc --title "Modifier paramètre du test '$select'" 3>&1 1>&2 2>&3)
+      val=$(whiptail --inputbox "\nEntrez le nouveau valeur pour '$i' :" 8 78 $valAc --title "Modifier paramètre du test [$select]" 3>&1 1>&2 2>&3)
       if [ $? = 1 ] ; then die "Tache interrompue." 1 ; fi
       sed -i "/$i $valAc/ c \\$i $val" "$select.cfg"
     done
@@ -477,7 +479,7 @@ elif [ $ACTION == "add" ] ; then
        #fi
     #   die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
     #fi
-    # apercu
+    apercu
     # if ! redemarrer_serv_perfsonar ; then
     #    die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
     #    recuperer_logs
@@ -502,7 +504,7 @@ elif [ $ACTION == "delete" ] ; then
     # fi
 
 elif [ $ACTION == "conftest" ] ; then
-  if (whiptail --title "Manage tests" --yesno --no-button "Avancée" --yes-button "Suivant" "Normalement, cette partie est déjà configurée. SUIVANT si vous voulez activer ou desactiver des tests. AVANCÉE pour modifier les paramètres des tests." 10 78) then
+  if (whiptail --title "Manage tests" --yesno --no-button "Avancée" --yes-button "Suivant" "Normalement, cette partie est déjà configurée. Appuyez sur SUIVANT si vous voulez activer ou desactiver des tests ou sur AVANCÉE pour modifier les paramètres des tests." 10 78) then
     active_tests
     #  ./creation_meshconfig.py "${DIR}" "1" Juste le parametre pour savoir s'il sagit de la tache conftes
     ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}" "1"
