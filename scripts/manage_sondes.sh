@@ -14,7 +14,6 @@ arborescence () {
 EXAMPLE DES FICHIERS REQUIS PAR LE SCRIPT ET DE L'ARBORESCENCE DU REPERTOIRE
 
 REPERTOIRE SCRIPT
-
 .
 ├── manage_sonde.sh
 ├── creation_meshconfig.py
@@ -22,7 +21,6 @@ REPERTOIRE SCRIPT
 └── template.jinja2
 
 REPERTOIRE MESHCONFIG
-
 ../mesh
 ├── backup
 │   ├── meshconfig-02-05-2018-09:20.bak
@@ -62,18 +60,18 @@ aide()
 {
     echo ""
     echo "${bold}USAGE${normal}"
-    echo "      $0 ${italic}--action=[list,add,delete,conftest] --dir=[répertoire] [-h] [--help]${normal}" 1>&2
+    echo "      $0 --action=list|add|delete|conftest --dir=repertoire [-h] [--help]${normal}" 1>&2
     echo ""
-    echo "${bold}ARGS${normal}"
-    echo "${normal}${bold}      --action${normal}      spécifie quelle type de tache on veut réaliser."
+    echo "${bold}OPTIONS${normal}"
+    echo "${normal}${bold}      --action${normal}      tache à lancer"
     echo ""
     echo "          ${under}list${normal}      affiche la liste des sondes définies dans le fichier meshconfig"
     echo "          ${under}add${normal}       permet d'ajouter une nouvelle sonde"
     echo "          ${under}delete${normal}    permet de supprimer une sonde"
-    echo "          ${under}conftest${normal}  permet de modifier les relations entre les groupes et les tests"
+    echo "          ${under}conftest${normal}  permet d'activer ou désactiver des tests ou de modifier leurs paramètres"
     echo ""
     echo "${bold}      --dir${normal}         spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
-    echo "${bold}      -h, --help${normal}    usage."
+    echo "${bold}      --help, -h${normal}    usage"
     echo ""
     echo ""
 }
@@ -172,14 +170,14 @@ active_tests () {
 
   sel_items_checklist mesh[@]
 
-  tests_mesh=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist --separate-output "\nPar défaut, les tests qui tournent pour ce groupe sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+  tests_mesh=$(whiptail --title "Tests Groupe INTERNE - MESH" --checklist --separate-output "\nLes tests qui tournent actuellement pour ce groupe sont ceux déjà selectionés. Activez/desactivez ceux qui vous préferez." 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
   if [ $? = 1 ] || [[ $tests_mesh == "" ]] ; then die "Tache interrompue." 1 ; fi
 
   i=0
 
   sel_items_checklist disj[@]
 
-  tests_disj=$(whiptail --title "Tests Groupe EXTERIEUR - DISJOINT" --checklist --separate-output "\nPar défaut, les tests qui tournent pour ce groupe sont ceux déjà selectionés :" 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
+  tests_disj=$(whiptail --title "Tests Groupe EXTERIEUR - DISJOINT" --checklist --separate-output "\nLes tests qui tournent actuellement pour ce groupe sont ceux déjà selectionés. Activez/desactivez ceux qui vous préferez." 25 78 16 "${tests[@]}" 3>&1 1>&2 2>&3)
   if [ $? = 1 ] || [[ $tests_disj == "" ]] ; then die "Tache interrompue." 1 ; fi
 
 }
@@ -458,7 +456,7 @@ else
 fi
 
 if ! fichiers_script_presents ; then
-   die "Manque de fichiers nécessaires pour le script. Veulliez vérifier qu'ils sont dans le répertoire correspondant." 5
+   die "Manque de fichiers nécessaires pour le script. Veuillez vérifier qu'ils sont dans le répertoire correspondant." 5
 fi
 
 if [ $ACTION == "list" ] ; then
