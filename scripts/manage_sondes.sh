@@ -333,6 +333,7 @@ tache_sup_sonde () {
   i=0
   #Ce bucle sert à créer un tableu de facon qu'il puisse etre traité par whiptail
   #Pour ca on a besoin de stocker en premier lieu le nom du fichier, ensuite son description et enfin l'etat de radiolist
+
   for file in $(ls $DIR/sites) ; do
     sondes[i]=$(echo ${file%.*}) ; (( i++ ))
     sondes[i]=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//') ; (( i++ ))
