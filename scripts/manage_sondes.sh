@@ -408,7 +408,7 @@ tache_avancee () {
 }
 
 apercu () {
-  echo  -e "Maintenant un apercu du nouveau fichier meshconfig. "
+  echo  -e "Maintenant, un apercu du nouveau fichier meshconfig. "
   read -n 1 -s -r -p "Appuyez sur une touche pour continuer : "
   less $DIR/meshconfig.conf
 }
@@ -510,6 +510,7 @@ elif [ $ACTION == "conftest" ] ; then
     echo "Paramètres avancés"
     tache_avancee
     ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}"
+    apercu
   fi
   # if ! creation_json ; then
   #    #if ! recuperation ; then
