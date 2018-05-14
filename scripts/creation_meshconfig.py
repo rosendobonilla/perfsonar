@@ -18,46 +18,52 @@ import glob
 #groupe = le groupe relie au test
 #title = INTERNE ou EXTERIEUR cest juste pour l'affichage
 #modif = 1 ou 0, 1 si on a lance directement l'action 'conftest' et 0 si on vient des taches 'add' ou 'delete' sonde
-def test (liste,groupe,title,modif):
+def test (liste,courants,groupe,title,modif):
     for test in liste:
-        cmd = 'echo "' + groupe + ',' + test + '" >> ' + reperTests
-        os.system(cmd)
         file.write("<test>\n")
         if modif == 1:
-            descrip = raw_input("GROUPE " + title + " : Entrez une description pour le test : " + test + " - ")
+            if test in courants:
+                 descrip = courants[test]
+            else:
+                descrip = raw_input("GROUPE " + title + " : Entrez une description pour le nouveau test : " + test + " - ")
         else:
-            descrip = groupe
+            descrip = courants[test]
         file.write("   description    " + descrip + "\n")
         file.write("   group    " + groupe + "\n")
         file.write("   test_spec    " + test + "\n")
         file.write("</test>\n\n")
+        cmd = 'echo "' + groupe + ',' + test + ',' + descrip + '" >> ' + reperTests
+        os.system(cmd)
 
-testsMeshCourants = []
-testsDisjCourants = []
+testsMeshCourants = {}
+testsDisjCourants = {}
+testsMeshNew = []
+testsDisjNew = []
+
+def lister_tests_courants ():
+    for line in open(reper + "/tests/actives/actives.cfg").readlines():         #On lit le fichier actives.cfg pour recuperer les tests selectionés dans deux listes
+        lin = line.rstrip('\n').split(',')
+        print lin[0]," ",lin[1]," ",lin[2]
+        if lin[0] == "obas_interne_mesh":
+            #testsMeshCourants[lin[1]] = lin[2]
+            testsMeshCourants[lin[1]] = lin[2]
+        else:
+            testsDisjCourants[lin[1]] = lin[2]
 
 #On récupère le chemin du répertoire MESH grace au script BASH
 reper = sys.argv[1]
 nomFich = reper + "/meshconfig.conf"
 
-#if len(sys.argv) == 3:
 if len(sys.argv) == 5:
-    #Supp
     TESTS1 = sys.argv[2]
     TESTS2 = sys.argv[3]
     testsMeshNew = TESTS1.split('\n')
     testsDisjNew = TESTS2.split('\n')
-    #
     modif = 1
 else:
     modif = 0
-    #Convertir a function et inclure la description
-    for line in open(reper + "/tests/actives/actives.cfg").readlines():         #On lit le fichier active.cfg pour recuperer les tests selectionés dans deux listes
-        lin = line.rstrip('\n').split(',')
-        if lin[0] == "obas_interne_mesh":
-            #testsMeshCourants[lin[1]] = lin[2]
-            testsMeshCourants.append(lin[1])
-        else:
-            testsDisjCourants.append(lin[1])
+
+lister_tests_courants()
 
 #Variable contenant l'entete du fichier meshconfig
 entete = """description PerfSONAR Observatoire Mesh Config
@@ -121,12 +127,14 @@ cmd = 'rm -f ' + reperTests
 os.system(cmd)
 
 if modif == 1:
-    print "\nMaintenant, vous devez entrer les descriptions pour chacun des tests. Ces descriptions sont celles affichées dans le tableau de bord, il faut donc donner des descriptions adaptées.\n"
-    test(testsMeshNew,"obas_interne_mesh","INTERNE",1)
-    test(testsDisjNew,"obas_exterieur_disjoint","EXTERIEUR",1)
+    print "\nMaintenant, vous devez entrer les descriptions pour chacun des nouveaux tests. Ces descriptions sont celles affichées dans le tableau de bord, il faut donc donner des descriptions adaptées.\n"
+    test(testsMeshNew,testsMeshCourants,"obas_interne_mesh","INTERNE",1)
+    test(testsDisjNew,testsDisjCourants,"obas_exterieur_disj","EXTERIEUR",1)
 else:
-    test(testsMeshCourants,"obas_interne_mesh","INTERNE",0)
-    test(testsDisjCourants,"obas_exterieur_disjoint","EXTERIEUR",0)
+    testsMesh = testsMeshCourants.keys()
+    testsDisj = testsDisjCourants.keys()
+    test(testsMesh,"obas_interne_mesh","INTERNE",0)
+    test(testsDisj,"obas_exterieur_disj","EXTERIEUR",0)
 
 print "\nConfiguration complète !\n"
 
