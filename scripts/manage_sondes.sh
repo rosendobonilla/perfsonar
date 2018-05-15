@@ -324,9 +324,9 @@ tache_list () {
    echo "" ; i=1
    #Formatage de l'entete
    printf "\t\t%-25s\t\t%s\n\n" "${bold}HOST" "DESCRIPTION"
-   for file in $(ls $DIR/sites) ; do                                                    #Recuperer les noms des sondes
+   for file in $(ls $DIR/sites) ; do                                            #Recuperer les noms des sondes
      descr=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//')
-     printf "${normal}\t[ $i ]\t%-25s %s\n" "${file%.*}" "$descr"                                #Formater chaque ligne
+     printf "${normal}\t[ $i ]\t%-25s %s\n" "${file%.*}" "$descr"               #Formater chaque ligne
      (( i++ ))
    done
    echo ""
@@ -354,10 +354,10 @@ tache_sup_sonde () {
     lienS=$(find $DIR/groupes/ -name $sonde_sup)
     echo "Lien symbolique à supp : $lienS"
     echo "Site a supprimer : $DIR/sites/$sonde_sup.cfg"
-    rm -f $lienS ; rm -f "$DIR/sites/$sonde_sup.cfg"                                     #Si l'utilisateur confirme la suppression on ecrase le lien symbolique et le site
+    rm -f $lienS ; rm -f "$DIR/sites/$sonde_sup.cfg"                            #Si l'utilisateur confirme la suppression on ecrase le lien symbolique et le site
     echo "Mise à jour de la nouvelle configuration ..."
-    backup_fichiers                                                                      #On sauvegarde le fichier meshconfig actuel
-    ./creation_meshconfig.py "${DIR}"                                                          #On crée un nouveau meshconfig
+    backup_fichiers                                                             #On sauvegarde le fichier meshconfig actuel
+    ./creation_meshconfig.py "${DIR}"                                           #On crée un nouveau meshconfig
     echo "La sonde a été bien supprimée."
   else
     echo "La sonde n'a pas été supprimée."

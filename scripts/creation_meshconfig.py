@@ -64,7 +64,6 @@ else:
 
 lister_tests_courants()
 
-#Variable contenant l'entete du fichier meshconfig
 entete = """description PerfSONAR Observatoire Mesh Config
 
 <organization>
@@ -74,7 +73,6 @@ entete = """description PerfSONAR Observatoire Mesh Config
 
 file = open(nomFich,"wb")                                                       #On crée le nouveau fichier de configuration dans le chemin spécifié
 
-#L'entete va etre toujours la meme, on le met donc en dur dans le fichier
 file.write(entete)
 
 for fich in glob.glob(reper + '/sites/*.cfg')  :
