@@ -13,6 +13,11 @@ import yaml
 import sys
 import glob
 
+testsMeshCourants = {}
+testsDisjCourants = {}
+testsMeshNew = []
+testsDisjNew = []
+
 #Cette function va creer tous les tests en fonction des paramètres passés
 #liste = array testsDisj ou testsMesh contenant les test passes pour le script bash
 #groupe = le groupe relie au test
@@ -34,11 +39,6 @@ def test (liste,courants,groupe,title,modif):
         file.write("</test>\n\n")
         cmd = 'echo "' + groupe + ',' + test + ',' + descrip + '" >> ' + reperTests
         os.system(cmd)
-
-testsMeshCourants = {}
-testsDisjCourants = {}
-testsMeshNew = []
-testsDisjNew = []
 
 def lister_tests_courants ():
     for line in open(reper + "/tests/actives/actives.cfg").readlines():         #On lit le fichier actives.cfg pour recuperer les tests selectionés dans deux listes
@@ -77,11 +77,7 @@ file = open(nomFich,"wb")                                                       
 #L'entete va etre toujours la meme, on le met donc en dur dans le fichier
 file.write(entete)
 
-
-sites = glob.glob(reper + '/sites/*.cfg')                                       #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau                                                                    #Trier le tableau pour avoir en premier lieu les members 'a'
-
-#On parcours le tableau
-for fich in sites:
+for fich in glob.glob(reper + '/sites/*.cfg')  :
     for line in open(fich).readlines():                                         #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
         file.write(line)
 
@@ -92,9 +88,7 @@ for line in open("../conf/body-orgs.cfg").readlines():                          
     file.write(line)
 file.write("\n")
 
-tests = glob.glob(reper + '/tests/*.cfg')                                         #Le script parcours le répertoire /sites en cherchant des fichiers .cfg et met leurs noms dans un tableau                                                                    #Trier le tableau pour avoir en premier lieu les members 'a'
-
-for fich in tests:
+for fich in glob.glob(reper + '/tests/*.cfg'):
     for line in open(fich).readlines():                                         #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
         file.write(line)
     file.write("\n")
@@ -109,16 +103,13 @@ file.write("\n</group>")
 
 file.write("\n\n<group obas_exterieur_disjoint>\n")
 file.write("   type disjoint\n\n")
-
 types = [os.path.basename(x) for x in glob.glob(reper + "/groupes/disjoint/*")] #Cas particulier pour le groupe 'disjoint' ; d'abord on obtient les types (a ou b)
 types.sort()
-
 for tipo in types:                                                              #On utilise la meme methode pour obtenir les informations : dans ce cas, on parcours l'arborescence en cherchant les
     for mem in glob.glob(reper + "/groupes/disjoint/" + tipo + "/*"):           #les membres du groupe disjoint et les écrit dans le fichier
         dirname, filename = os.path.split(mem)
         file.write("   " + tipo + " " + filename + "\n")
     file.write("\n")
-
 file.write("</group>\n\n")
 
 reperTests = reper + '/tests/actives/actives.cfg'

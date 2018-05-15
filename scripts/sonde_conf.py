@@ -13,7 +13,7 @@ import yaml										    #Importer les modules nécessaires pour traiter le fich
 import sys 										    #Importer les modules nécessaires pour pouvoir utiliser des commandes du système
 
 
-#On recupére les variables envoyées par le script BASH	
+#On recupére les variables envoyées par le script BASH
 rep = sys.argv[1]
 idSonde = sys.argv[2]
 grp = sys.argv[3]
@@ -26,8 +26,8 @@ if len(sys.argv) == 5:
 
 
 nomFich = rep + "/sites/" + idSonde + ".cfg"        #On construit le nom complet du fichier contenant la nouvelle configuration du site
-dest = rep + "/groupes/" + grp + grpPath + idSonde  ## 
-cmd = "ln -s " + nomFich + " " + dest               #On crée la commande pour le lien symbolique
+dest = rep + "/groupes/" + grp + grpPath + idSonde  ##
+cmd = "ln -s " + nomFich + " " + dest              #On crée la commande pour le lien symbolique
 
 #On obtient les données du fichier YAML
 config_data = yaml.load(open('./data.yaml'))
@@ -38,7 +38,7 @@ template = env.get_template('template.jinja2')
 config = template.render(config_data)
 
 #On l'écrit dans le fichier
-file = open(nomFich,"wr") 
+file = open(nomFich,"wr")
 file.write(config)
 
 #On crée le lien simbolique
