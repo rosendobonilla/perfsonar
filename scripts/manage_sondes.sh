@@ -217,7 +217,7 @@ information () {
    elif [[ $opt == "exterieur" ]] ; then
       TYPE="disjoint"
 
-      tipo=$(whiptail --title "Manage groups" --menu "Choisissez le type de membre. Par défaut TYPE B" 16 78 5 \
+      tipo=$(whiptail --title "Manage groups" --menu "Choisissez le type de membre. Normalement, ce dernier doit être un membre type B." 16 78 5 \
               "Member A" "Membre sur l'observatoire"\
               "Member B" "Membre à l'exterieur" 3>&2 2>&1 1>&3)
 
@@ -386,13 +386,13 @@ tache_avancee () {
     if [ $? = 1 ] || [[ $select == "" ]] ; then die "Tache interrompue." 1 ; fi
     pathSelect="$DIR/tests/$select.cfg"
     x=0
-    for i in $(grep -E -v ">$" $pathSelect | cut -d" " -f1) ; do
+    for i in $(grep -E -v ">$" $pathSelect | sed -e 's/^[ ]*//' | cut -d" " -f1) ; do
        param[x]=$i ;  (( x++ ))
     done
 
     i=0
     for par in "${param[@]}" ; do
-      val=$(grep -E "^$par" $pathSelect | cut -d" " -f2)
+      val=$(grep -E "$par" $pathSelect | sed -e 's/^[ ]*//' | cut -d" " -f2)
       params[i]=$par ; (( i++ ))
       params[i]="= $val" ; (( i++ ))
       params[i]="OFF" ; (( i++ ))
@@ -403,7 +403,7 @@ tache_avancee () {
 
     cd $DIR/tests/
     for i in "${psAr[@]}" ; do
-      valAc=$(grep -E "^$i" $select.cfg | cut -d" " -f2)
+      valAc=$(grep -E "$i" $select.cfg | sed -e 's/^[ ]*//' | cut -d" " -f2)
       val=$(whiptail --inputbox "\nEntrez le nouveau valeur pour '$i' :" 8 78 $valAc --title "Modifier paramètre du test [$select]" 3>&1 1>&2 2>&3)
       if [ $? = 1 ] ; then die "Tache interrompue." 1 ; fi
       if [ -n $(echo $val | grep /) ] ; then
