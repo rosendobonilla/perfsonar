@@ -314,6 +314,9 @@ tache_add () {
    rm -f ./data.yaml
    backup_fichiers
    ./creation_meshconfig.py "${DIR}"
+   #Partie SaltStack, appel a la commande pour rajouter le bloque mesh dans le fichier /etc/perfsonar/meshconfig-agent.conf de la nouvelle sonde
+   #Savoir l'identifient du minion
+   #salt 'ID' state.sls mod
    return 0
 }
 
@@ -528,5 +531,4 @@ elif [ $ACTION == "conftest" ] ; then
 else
     aide
 fi
-
 exit 0
