@@ -406,6 +406,12 @@ tache_avancee () {
       valAc=$(grep -E "^$i" $select.cfg | cut -d" " -f2)
       val=$(whiptail --inputbox "\nEntrez le nouveau valeur pour '$i' :" 8 78 $valAc --title "Modifier paramètre du test [$select]" 3>&1 1>&2 2>&3)
       if [ $? = 1 ] ; then die "Tache interrompue." 1 ; fi
+      if [ -n $(echo $val | grep /) ] ; then
+          division=(${val//"/"/ });
+          val="${divison[0]}\/${divison[1]}";
+          division=(${valAc//"/"/ });
+          valAc="${divison[0]}\/${divison[1]}";
+      fi
       sed -i "/$i $valAc/ c \\$i $val" "$select.cfg"
     done
     cd $repAc
