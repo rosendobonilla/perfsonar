@@ -24,7 +24,6 @@ if len(sys.argv) == 5:
     membre = sys.argv[4]
     grpPath = "/" + membre + "/"                    #On crée le chemin vers tous les fichiers du groupe disjoint
 
-
 nomFich = rep + "/sites/" + idSonde + ".cfg"        #On construit le nom complet du fichier contenant la nouvelle configuration du site
 dest = rep + "/groupes/" + grp + grpPath + idSonde  ##
 cmd = "ln -s " + nomFich + " " + dest              #On crée la commande pour le lien symbolique
