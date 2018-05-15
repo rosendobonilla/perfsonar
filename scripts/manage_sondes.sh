@@ -420,38 +420,38 @@ tache_avancee () {
     cd $repAc
 }
 
-tache_confgroup () {
-  lister_sites
-  sonde=$(whiptail --title "Admnistration de groupes " --radiolist "Choisissez une sonde :" 25 78 16 "${sondes[@]}" 3>&1 1>&2 2>&3)
-  if [ -z $(find $DIR/groupes/mesh/ -name $sonde) ] ; then meshGr=0; else meshGr=1; fi
-  if [ -z $(find $DIR/groupes/disjoint/ -name $sonde) ] ; then disjGr=0; else disjGr=1; fi
-  if [ $meshGr = 1 ] && [ $disjGr = 1 ] ; then deux=1; fi
-  if (whiptail --title "Administration de groupes" --yesno --no-button "Supprimer" --yes-button "Modifier" "Ici, vous allez gérer le(s) groupe(s) des sondes définies. MODIFIER pour changer le groupe d'une sonde ou SUPPRIMER pour l'enlever de ses groupes." 10 78) then
-      if [[ $deux = 1 ]] ; then
-          whiptail --title "Administration de groupes" --msgbox "Cette sonde appartient déjà aux deux groupes. Rien à faire." 8 78
-      else
-          if [ $meshGr = 1 ] ; then
-              if (whiptail --title "Admnistration de groupes" --yesno --no-button "Changer" --yes-button "Ajouter à un groupe" "La sonde $sonde appartient au groupe INTERNE MESH. Choisissez CHANGER pour la changer au groupe EXTERIEUR ou AJOUTER pour l'ajouter aussi au groupe EXTERIEUR." 10 78) then
-                  echo "Ajouter"
-              else
-                  echo "Changer"
-              fi
-          fi
-
-          if [ $disjGr = 1 ] ; then
-            if (whiptail --title "Admnistration de groupes" --yesno --no-button "Changer" --yes-button "Ajouter à un groupe" "La sonde $sonde appartient au groupe EXTERIEUR DISJOINT. Choisissez CHANGER pour la changer au groupe MESH ou AJOUTER pour l'ajouter aussi au groupe MESH." 10 78) then
-                  echo "Ajouter"
-              else
-                  echo "Changer"
-              fi
-          fi
-      fi
-  else
-      if [[ $deux = 1 ]] ; then
-          echo "Voulez-vous supprimer la sonde des deux groupes dont elle fait partie ?"
-      fi
-  fi
-}
+# tache_confgroup () {
+#   lister_sites
+#   sonde=$(whiptail --title "Admnistration de groupes " --radiolist "Choisissez une sonde :" 25 78 16 "${sondes[@]}" 3>&1 1>&2 2>&3)
+#   if [ -z $(find $DIR/groupes/mesh/ -name $sonde) ] ; then meshGr=0; else meshGr=1; fi
+#   if [ -z $(find $DIR/groupes/disjoint/ -name $sonde) ] ; then disjGr=0; else disjGr=1; fi
+#   if [ $meshGr = 1 ] && [ $disjGr = 1 ] ; then deux=1; fi
+#   if (whiptail --title "Administration de groupes" --yesno --no-button "Supprimer" --yes-button "Modifier" "Ici, vous allez gérer le(s) groupe(s) des sondes définies. MODIFIER pour changer le groupe d'une sonde ou SUPPRIMER pour l'enlever de ses groupes." 10 78) then
+#       if [[ $deux = 1 ]] ; then
+#           whiptail --title "Administration de groupes" --msgbox "Cette sonde appartient déjà aux deux groupes. Rien à faire." 8 78
+#       else
+#           if [ $meshGr = 1 ] ; then
+#               if (whiptail --title "Admnistration de groupes" --yesno --no-button "Changer" --yes-button "Ajouter à un groupe" "La sonde $sonde appartient au groupe INTERNE MESH. Choisissez CHANGER pour la changer au groupe EXTERIEUR ou AJOUTER pour l'ajouter aussi au groupe EXTERIEUR." 10 78) then
+#                   echo "Ajouter"
+#               else
+#                   echo "Changer"
+#               fi
+#           fi
+#
+#           if [ $disjGr = 1 ] ; then
+#             if (whiptail --title "Admnistration de groupes" --yesno --no-button "Changer" --yes-button "Ajouter à un groupe" "La sonde $sonde appartient au groupe EXTERIEUR DISJOINT. Choisissez CHANGER pour la changer au groupe MESH ou AJOUTER pour l'ajouter aussi au groupe MESH." 10 78) then
+#                   echo "Ajouter"
+#               else
+#                   echo "Changer"
+#               fi
+#           fi
+#       fi
+#   else
+#       if [[ $deux = 1 ]] ; then
+#           echo "Voulez-vous supprimer la sonde des deux groupes dont elle fait partie ?"
+#       fi
+#   fi
+# }
 
 apercu () {
   echo  -e "Maintenant, un apercu du nouveau fichier meshconfig. "
