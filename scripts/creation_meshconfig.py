@@ -71,6 +71,11 @@ entete = """description PerfSONAR Observatoire Mesh Config
 
 """
 
+orgs ="""   b_member sbgperfps1.in2p3.fr
+   b_member clrperf-bwctl.in2p3.fr
+   b_member 193.55.200.68
+"""
+
 file = open(nomFich,"wb")                                                       #On crée le nouveau fichier de configuration dans le chemin spécifié
 
 file.write(entete)
@@ -99,11 +104,13 @@ for mem in glob.glob(reper + "/groupes/mesh/*"):
     file.write("\n   member " + filename)
 file.write("\n</group>")
 
-file.write("\n\n<group obas_exterieur_disjoint>\n")
+file.write("\n\n<group obas_exterieur_disj>\n")
 file.write("   type disjoint\n\n")
 types = [os.path.basename(x) for x in glob.glob(reper + "/groupes/disjoint/*")] #Cas particulier pour le groupe 'disjoint' ; d'abord on obtient les types (a ou b)
 types.sort()
 for tipo in types:                                                              #On utilise la meme methode pour obtenir les informations : dans ce cas, on parcours l'arborescence en cherchant les
+    if tipo == 'b_member':
+       file.write(orgs)
     for mem in glob.glob(reper + "/groupes/disjoint/" + tipo + "/*"):           #les membres du groupe disjoint et les écrit dans le fichier
         dirname, filename = os.path.split(mem)
         file.write("   " + tipo + " " + filename + "\n")
