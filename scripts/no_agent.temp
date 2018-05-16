@@ -1,12 +1,12 @@
 
 <organization>
-    description     {org}
+    description  {{ org }}
 
     <site>
         <host>
-	            no_agent 1
-              description {desc}
-              address {ip}
+	      no_agent 1
+              description {{ desc }}
+              address {{ add }}
         </host>
     </site>
 </organization>

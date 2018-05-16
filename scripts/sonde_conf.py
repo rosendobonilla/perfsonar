@@ -27,7 +27,7 @@ if len(sys.argv) == 6:
 
 if no_agent == 0:
     nomFich = rep + "/sites/" + idSonde + ".cfg"        #On construit le nom complet du fichier contenant la nouvelle configuration du site
-else
+else:
     nomFich = rep + "/sites/no_agent/" + idSonde + ".cfg"
 
 dest = rep + "/groupes/" + grp + grpPath + idSonde  ##
@@ -40,7 +40,7 @@ config_data = yaml.load(open('./data.yaml'))
 env = Environment(loader = FileSystemLoader('./'), trim_blocks=True, lstrip_blocks=True)
 if no_agent == 0:
     template = env.get_template('sonde_obas.temp')
-else
+else:
     template = env.get_template('no_agent.temp')
 config = template.render(config_data)
 
