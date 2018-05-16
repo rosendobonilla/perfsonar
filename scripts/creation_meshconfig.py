@@ -87,9 +87,14 @@ for fich in glob.glob(reper + '/sites/*.cfg')  :
 #On ferme le bloque
 file.write("</organization>\n\n")
 
-for line in open("../conf/body-orgs.cfg").readlines():                          #Là, on récupère la partie 'fixe' (les orgs)
-    file.write(line)
-file.write("\n")
+# for line in open("../conf/body-orgs.cfg").readlines():                          #Là, on récupère la partie 'fixe' (les orgs)
+#     file.write(line)
+# file.write("\n")
+
+for fich in glob.glob(reper + '/sites/no_agent/*.cfg'):
+    for line in open(fich).readlines():                                         #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf
+        file.write(line)
+    file.write("\n")
 
 for fich in glob.glob(reper + '/tests/*.cfg'):
     for line in open(fich).readlines():                                         #On lit chaque fichier de conf et l'écrit dans le fichier meshconfig.conf

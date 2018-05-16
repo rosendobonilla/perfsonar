@@ -1,0 +1,12 @@
+
+<organization>
+    description     {org}
+
+    <site>
+        <host>
+	            no_agent 1
+              description {desc}
+              address {ip}
+        </host>
+    </site>
+</organization>

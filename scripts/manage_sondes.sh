@@ -6,7 +6,7 @@
 #-----------------------------------------------------------------------------------------------#
 #Corriger certaines functions
 
-ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE=""
+ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE="" ; no_agent=0
 bold=$(tput bold) ; normal=$(tput sgr0) ; italic=$(tput sitm) ; under=$(tput smul) ; tests_mesh="" ; tests_disj="" ; sondes=
 
 arborescence () {
@@ -18,7 +18,7 @@ REPERTOIRE SCRIPT
 ├── manage_sonde.sh
 ├── creation_meshconfig.py
 ├── sonde_conf.py
-└── template.jinja2
+└── sonde_obas.temp
 
 REPERTOIRE MESHCONFIG
 ../mesh
@@ -120,7 +120,7 @@ assurer_entres () {
 #Vérifier que tous les fichiers qui comportent le script sont dans les répertoire courant
 
 fichiers_script_presents () {
-   if [ ! -f "./creation_meshconfig.py" ] || [ ! -f "./template.jinja2" ] || [ ! -f "./sonde_conf.py" ] ; then
+   if [ ! -f "./creation_meshconfig.py" ] || [ ! -f "./sonde_obas.temp" ] || [ ! -f "./sonde_conf.py" ] ; then
       return 1
    fi
    if [ ! -d "$DIR/sites" ] || [ ! -d "$DIR/backup" ] || [ ! -d "$DIR/groupes" ] || [ ! -d "$DIR/tests" ] || [ ! -f "$DIR/meshconfig.conf" ]  ; then
@@ -185,6 +185,11 @@ active_tests () {
 #Demander les informations concernant la sonde
 
 information () {
+   if (whiptail --title "Type de sonde" --yesno --yes-button "Observatoire" --no-button "Autre" "La sonde à ajouter s'agit d'une sonde qui appartient à l'observatoire (que l'on maitrise) ou d'une sonde d'une autre organisation (ex. celle de RENATER)" 8 78) then
+      org=$(whiptail --inputbox "Entrez le nom de l'organisation." 8 78 --title "Information" 3>&1 1>&2 2>&3)
+   else
+      org="null"
+   fi
    descr=$(whiptail --inputbox "Entrez une description pour la sonde." 8 78 --title "Information" 3>&1 1>&2 2>&3)
 
    exitstatus=$?
@@ -236,8 +241,13 @@ information () {
 #Création du fichier data.yaml pour remplir le template
 
 creation_data_yaml () {
-   echo "desc: "$descr"" >> ./data.yaml
-   echo "add: "$addr"" >> ./data.yaml
+   if [ $no_agent = 0 ] ; then
+     echo "desc: "$descr"" >> ./data.yaml
+     echo "add: "$addr"" >> ./data.yaml
+   else
+     echo "org: "$descr"" >> ./data.yaml
+     echo "desc: "$descr"" >> ./data.yaml
+     echo "add: "$addr"" >> ./data.yaml
    return 0
 }
 
@@ -312,9 +322,9 @@ tache_add () {
 
    #Cette partie permet  d'envoyer les paramètres selon le type de groupe, le groupe disjoint nécessite d'un paramètre en plus
    if [[ $TYPE == "disjoint" ]] ; then
-      ./sonde_conf.py "${DIR}" "${addr}" "${TYPE}" "${MEMBRE}"
+      ./sonde_conf.py "${DIR}" "${addr}" "${TYPE}" "${no_agent}" "${MEMBRE}"
    else
-      ./sonde_conf.py "${DIR}" "${addr}" "${TYPE}"
+      ./sonde_conf.py "${DIR}" "${addr}" "${TYPE}" "${no_agent}"
    fi
    rm -f ./data.yaml
    backup_fichiers

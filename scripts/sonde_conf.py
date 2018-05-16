@@ -17,14 +17,19 @@ import sys 										    #Importer les modules nécessaires pour pouvoir utilise
 rep = sys.argv[1]
 idSonde = sys.argv[2]
 grp = sys.argv[3]
+no_agent = sys.argv[4]
 grpPath = "/"
 
 #Si on recoit cinq paramètres ca veut dire qu'il s'agit d'un groupe disjoint
-if len(sys.argv) == 5:
-    membre = sys.argv[4]
+if len(sys.argv) == 6:
+    membre = sys.argv[5]
     grpPath = "/" + membre + "/"                    #On crée le chemin vers tous les fichiers du groupe disjoint
 
-nomFich = rep + "/sites/" + idSonde + ".cfg"        #On construit le nom complet du fichier contenant la nouvelle configuration du site
+if no_agent == 0:
+    nomFich = rep + "/sites/" + idSonde + ".cfg"        #On construit le nom complet du fichier contenant la nouvelle configuration du site
+else
+    nomFich = rep + "/sites/no_agent/" + idSonde + ".cfg"
+
 dest = rep + "/groupes/" + grp + grpPath + idSonde  ##
 cmd = "ln -s " + nomFich + " " + dest              #On crée la commande pour le lien symbolique
 
@@ -33,7 +38,10 @@ config_data = yaml.load(open('./data.yaml'))
 
 #On utilise le template pour créer la configuration
 env = Environment(loader = FileSystemLoader('./'), trim_blocks=True, lstrip_blocks=True)
-template = env.get_template('template.jinja2')
+if no_agent == 0:
+    template = env.get_template('sonde_obas.temp')
+else
+    template = env.get_template('no_agent.temp')
 config = template.render(config_data)
 
 #On l'écrit dans le fichier
