@@ -381,9 +381,10 @@ tache_sup_sonde () {
   #Radiolist utilise le tableau crée précedement
   if (whiptail --title "Supprimer une sonde" --yesno "Vous êtes en train de supprimer la sonde $sonde_sup. Vous devez vous assurer que vous n'en avez plus besoin. Voulez-vous continuer ?" 8 78) then
     lienS=$(find $DIR/groupes/ -name $sonde_sup)
+    site=$(find $DIR/sites/ -name $sonde_sup.cfg)
     echo "Lien symbolique à supp : $lienS"
     echo "Site a supprimer : $DIR/sites/$sonde_sup.cfg"
-    rm -f $lienS ; rm -f "$DIR/sites/$sonde_sup"                            #Si l'utilisateur confirme la suppression on ecrase le lien symbolique et le site
+    rm -f $lienS ; rm -f $site                           #Si l'utilisateur confirme la suppression on ecrase le lien symbolique et le site
     echo "Mise à jour de la nouvelle configuration ..."
     backup_fichiers                                                             #On sauvegarde le fichier meshconfig actuel
     ./creation_meshconfig.py "${DIR}"                                           #On crée un nouveau meshconfig
@@ -510,35 +511,35 @@ elif [ $ACTION == "add" ] ; then
        die "Erreur produite peut-être à cause d'un probleme de droits sur le répertoire courant." 1
     fi
     tache_add
-    if ! creation_json ; then
-       if ! recuperation ; then
-          die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $DIR.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
-       fi
-       die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
-    fi
+    # if ! creation_json ; then
+    #    if ! recuperation ; then
+    #       die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $DIR.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
+    #    fi
+    #    die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
+    # fi
     apercu
-    if ! redemarrer_serv_perfsonar ; then
-       die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
-       recuperer_logs
-    else
-       recuperer_logs
-    fi
+    # if ! redemarrer_serv_perfsonar ; then
+    #    die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
+    #    recuperer_logs
+    # else
+    #    recuperer_logs
+    # fi
 elif [ $ACTION == "delete" ] ; then
     echo "TACHE SUPRIMER UN SONDE"
     if ! tache_sup_sonde ; then die "Vous devez choisir la sonde à supprimer" 1 ; fi
     apercu
-    if ! creation_json ; then
-       if ! recuperation ; then
-          die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $DIR.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
-       fi
-       die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
-    fi
-    if ! redemarrer_serv_perfsonar ; then
-       die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
-       recuperer_logs
-    else
-       recuperer_logs
-    fi
+    # if ! creation_json ; then
+    #    if ! recuperation ; then
+    #       die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $DIR.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
+    #    fi
+    #    die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
+    # fi
+    # if ! redemarrer_serv_perfsonar ; then
+    #    die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
+    #    recuperer_logs
+    # else
+    #    recuperer_logs
+    # fi
 
 elif [ $ACTION == "conftest" ] ; then
   if (whiptail --title "Manage tests" --yesno --no-button "Avancé" --yes-button "Suivant" "Normalement, cette partie est déjà configurée. Appuyez sur SUIVANT si vous voulez activer ou desactiver des tests ou sur AVANCÉE pour modifier les paramètres des tests." 10 78) then
@@ -551,18 +552,18 @@ elif [ $ACTION == "conftest" ] ; then
     ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}"
     apercu
   fi
-  if ! creation_json ; then
-     if ! recuperation ; then
-        die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $DIR.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
-     fi
-     die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
-  fi
-  if ! redemarrer_serv_perfsonar ; then
-     die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
-     recuperer_logs
-  else
-     recuperer_logs
-  fi
+  # if ! creation_json ; then
+  #    if ! recuperation ; then
+  #       die "Une erreur s'est produite pendant la récuperation de la configuration précedente. Vous avez le fichier $DIR.bak comme backup. Là dedans, vous avez toute votre configuration MESH precédente à la MàJ esssayée." 1
+  #    fi
+  #    die "Erreur dans la création de la nouvelle configuration pour le fichier JSON." 1
+  # fi
+  # if ! redemarrer_serv_perfsonar ; then
+  #    die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
+  #    recuperer_logs
+  # else
+  #    recuperer_logs
+  # fi
 else
     aide
 fi
