@@ -103,6 +103,8 @@ dependences_script () {
    elif [[ -e "/etc/centos-release" ]]; then
       if ! command -v whiptail>/dev/null 2>&1 ; then yum -y install newt; fi
       if [ -z $(rpm -qa | grep yaml) ] ; then yum -y install python-yaml; fi
+   else
+      echo "Ce système n'est pas supporté. Pour le moment, le script est fait pour Debian 8/9 et CentOS 6/7"
    fi
    return 0
 }
@@ -188,7 +190,6 @@ active_tests () {
 
 information () {
    if (whiptail --title "Type de sonde" --yesno --yes-button "Observatoire" --no-button "Autre" "La sonde à ajouter s'agit d'une sonde qui appartient à l'observatoire (que l'on maitrise) ou d'une sonde d'une autre organisation (ex. celle de RENATER) ?" 12 78) then
-      org="null"
       no_agent=0
    else
       org=$(whiptail --inputbox "Entrez le nom de l'organisation." 8 78 --title "Information" 3>&1 1>&2 2>&3)
