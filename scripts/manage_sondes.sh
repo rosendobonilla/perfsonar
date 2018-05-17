@@ -332,9 +332,14 @@ tache_list () {
    echo "" ; i=1
    #Formatage de l'entete
    printf "\t\t%-25s\t\t%s\n\n" "${bold}HOST" "DESCRIPTION"
-   for file in $(ls $DIR/sites) ; do                                            #Recuperer les noms des sondes
-     descr=$(grep description $DIR/sites/$file | sed -e 's/^[ ]*description//')
-     printf "${normal}\t[ $i ]\t%-25s %s\n" "${file%.*}" "$descr"               #Formater chaque ligne
+   for file in $(find $DIR/sites -type f -name *.cfg) ; do
+     nom=${file##*/}
+     if [ -z $(echo $file | grep no_agent) ] ; then
+        descr=$(grep description $file | sed -e 's/^[ ]*description//')
+     else
+        descr=$(grep -E "^ {5,}description" $file | sed -e 's/^[ ]*description//')
+     fi
+     printf "${normal}\t[ $i ]\t%-25s %s\n" "${nom%.*}" "$descr"               #Formater chaque ligne
      (( i++ ))
    done
    echo ""
