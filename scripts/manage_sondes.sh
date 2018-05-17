@@ -60,7 +60,7 @@ aide()
 {
     echo ""
     echo "${bold}USAGE${normal}"
-    echo "      $0 --action=list|add|delete|conftest --dir=repertoire [-h] [--help]${normal}" 1>&2
+    echo "      $0 --action=list|add|delete|conftest|meshfile --dir=repertoire [-h] [--help]${normal}" 1>&2
     echo ""
     echo "${bold}OPTIONS${normal}"
     echo "${normal}${bold}      --action${normal}      tache à lancer"
@@ -69,6 +69,7 @@ aide()
     echo "          ${under}add${normal}       permet d'ajouter une nouvelle sonde"
     echo "          ${under}delete${normal}    permet de supprimer une sonde"
     echo "          ${under}conftest${normal}  permet d'activer ou désactiver des tests ou de modifier leurs paramètres"
+    echo "          ${under}meshfile${normal}  permet d'afficher le fichier meshconfig actuel"
     echo ""
     echo "${bold}      --dir${normal}         spécifie le chemin vers le répertoire où se trouve toute la configuration MESH."
     echo "${bold}      --help, -h${normal}    usage"
@@ -565,6 +566,8 @@ elif [ $ACTION == "conftest" ] ; then
   # else
   #    recuperer_logs
   # fi
+elif [ $ACTION == "meshfile" ] ; then
+    apercu
 else
     aide
 fi
