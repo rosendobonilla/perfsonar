@@ -64,7 +64,7 @@ else:
 
 lister_tests_courants()
 
-entete = """description PerfSONAR Observatoire Mesh Config
+entete = """description PerfSONAR Observatoire Mesh
 
 <organization>
     description     Observatoire Astronomique de Strasbourg
