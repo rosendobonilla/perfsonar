@@ -280,7 +280,7 @@ backup_fichiers () {
 
 recuperation () {
    rm -f "$DIR/meshconfig.conf"
-   cp "$DIR/backup/$nomback" "$DIR/meshconfig.conf"
+   cp "$DIR/backup/$nomBack" "$DIR/meshconfig.conf"
    if creation_json ; then
       echo "Recupération de la config precédente réussite."
       return 0
