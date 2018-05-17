@@ -308,20 +308,6 @@ redemarrer_serv_perfsonar () {
    return 0
 }
 
-#Affichage des derniers logs pour vérifier si tout s'est bien passé
-
-recuperer_logs () {
-   clear
-   echo -e "\n+-------------------------------------------------------------------------------------+\n"
-   echo -e "+----------------------DERNIERS LOGS MESHConfig AGENT---------------------------------+"
-   echo -e "\n+-------------------------------------------------------------------------------------+\n"
-   tail -15 /var/log/perfsonar/meshconfig-agent.log
-   echo -e "\n+-------------------------------------------------------------------------------------+\n"
-   echo -e "+----------------------DERNIERS LOGS MESHConfig GUIAGENT------------------------------+"
-   echo -e "\n+-------------------------------------------------------------------------------------+\n"
-   tail -15 /var/log/perfsonar/meshconfig-guiagent.log
-}
-
 #Appel aux scripts en Python qui feront toutes les modifications dans les fichiers correspondants
 
 tache_add () {
@@ -522,9 +508,6 @@ elif [ $ACTION == "add" ] ; then
     apercu
     # if ! redemarrer_serv_perfsonar ; then
     #    die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
-    #    recuperer_logs
-    # else
-    #    recuperer_logs
     # fi
 elif [ $ACTION == "delete" ] ; then
     echo "TACHE SUPRIMER UN SONDE"
@@ -538,9 +521,6 @@ elif [ $ACTION == "delete" ] ; then
     # fi
     # if ! redemarrer_serv_perfsonar ; then
     #    die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
-    #    recuperer_logs
-    # else
-    #    recuperer_logs
     # fi
 
 elif [ $ACTION == "conftest" ] ; then
@@ -562,9 +542,6 @@ elif [ $ACTION == "conftest" ] ; then
   # fi
   # if ! redemarrer_serv_perfsonar ; then
   #    die "Un erreur s'est produite pendant le rédemarrage des services perfSONAR." 1
-  #    recuperer_logs
-  # else
-  #    recuperer_logs
   # fi
 elif [ $ACTION == "meshfile" ] ; then
     apercu
