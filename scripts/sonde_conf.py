@@ -53,4 +53,3 @@ file.write(config)
 #On crée le lien simbolique
 os.system(cmd)
 
-#Amelioration
