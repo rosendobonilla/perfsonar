@@ -8,9 +8,9 @@
 #--------------------------------------------------------------------------------------------#
 
 import os
-from jinja2 import Environment, FileSystemLoader    #Importer les modules nécessaires pour traiter le template
-import yaml										    #Importer les modules nécessaires pour traiter le fichier YAML
-import sys 										    #Importer les modules nécessaires pour pouvoir utiliser des commandes du système
+from jinja2 import Environment, FileSystemLoader
+import yaml										    
+import sys 										    
 
 
 #On recupére les variables envoyées par le script BASH
