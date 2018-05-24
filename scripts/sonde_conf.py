@@ -12,8 +12,6 @@ from jinja2 import Environment, FileSystemLoader
 import yaml										    
 import sys 										    
 
-
-#On recupére les variables envoyées par le script BASH
 rep = sys.argv[1]
 idSonde = sys.argv[2]
 grp = sys.argv[3]
