@@ -5,6 +5,8 @@
 # apparaitre, les dependences et les appels aux scripts Python                                  #
 #-----------------------------------------------------------------------------------------------#
 
+
+#Traiter ANNULER partie groupe
 ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE="" ; no_agent=0
 bold=$(tput bold) ; normal=$(tput sgr0) ; italic=$(tput sitm) ; under=$(tput smul) ; tests_mesh="" ; tests_disj="" ; sondes=
 
