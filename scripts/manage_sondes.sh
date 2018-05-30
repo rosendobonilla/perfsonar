@@ -6,7 +6,6 @@
 #-----------------------------------------------------------------------------------------------#
 
 
-#Traiter ANNULER partie groupe
 ACTION="" ; DIR="" ; path_SRV="/var/www/html" ; jour=$(date "+%d-%m-%Y") ; heure=$(date "+%H:%M") ; nomBack="meshconfig-$jour-$heure.bak" ; TYPE="" ; MEMBRE="" ; no_agent=0
 bold=$(tput bold) ; normal=$(tput sgr0) ; italic=$(tput sitm) ; under=$(tput smul) ; tests_mesh="" ; tests_disj="" ; sondes=
 
@@ -222,6 +221,7 @@ information () {
         "Exterieur" "Groupe sondes publiques" 3>&2 2>&1 1>&3)
 
    opt=$(echo $groupe | tr '[:upper:]' '[:lower:]')
+   if [ $? != 0 ] ; then return 1; fi
 
 
    if [[ $opt == "interne" ]] ; then
@@ -232,6 +232,7 @@ information () {
       tipo=$(whiptail --title "Manage groups" --menu "Choisissez le type de membre. Normalement, ce dernier doit être un membre type B." 16 78 5 \
               "Member A" "Membre sur l'observatoire"\
               "Member B" "Membre à l'exterieur" 3>&2 2>&1 1>&3)
+      if [ $? != 0 ] ; then return 1; fi
 
       opt2=$(echo $tipo | tr '[:upper:]' '[:lower:]' | sed 's/ //g')
       if [[ $opt2 == "membera" ]] ; then
