@@ -133,7 +133,7 @@ fichiers_script_presents () {
    return 0
 }
 
-lister_test () {
+lister_tests () {
   for file in $(ls -p $DIR/tests/ | grep -v /) ; do
     tests[i]=$(echo ${file%.*}) ; (( i++ ))
     tests[i]="" ; (( i++ ))
