@@ -48,3 +48,11 @@ Les machines virtuelles pour mettre en place les sondes reelles ne sont pas pour
 Plusieurs problemes avec le nouveau fichier mesh-conf. D'abord, je peut pas definir un groupe "start" car il y a des soucis pour créer la configuration de maddash, je donc opté pour un groupe "disjoint". Ce groupe on l'utilisera pour etablir des test avec de sondes a l'exterieur. Ensuite, j'ai du changer aussi l'instruction "no_agent".
 Probleme Couldn't find a tool in common among the participants. Selon moi ca vient des test qui se lancent a l'exterieur (avec la sonde CNRS Strasbourg par exemple) et alors il y a des problemes de compatibilité entre les outils de test des deux sondes (evidemment on connait pas du tout les outils qu'ils on mis en place).
 Les grids sur MaddAsh semblent bien marcher sauf pour les tests a l'exterieur que l'on corrigera dans les sonde reelles
+
+
+
+
+Tools :
+
+overleaf.com    - documents edition, latex
+lucidchart.com  - mindmaps, diagrams
