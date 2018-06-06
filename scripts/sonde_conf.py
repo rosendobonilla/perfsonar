@@ -25,7 +25,6 @@ if len(sys.argv) == 6:
     grpPath = "/" + membre + "/"                    #On crée le chemin vers tous les fichiers du groupe disjoint
 
 if no_agent == '0':
-    print "Entro al IF en agent 0"
     nomFich = rep + "/sites/" + idSonde + ".cfg"        #On construit le nom complet du fichier contenant la nouvelle configuration du site
 else:
     nomFich = rep + "/sites/no_agent/" + idSonde + ".cfg"
