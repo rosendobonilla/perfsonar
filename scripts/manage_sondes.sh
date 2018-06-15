@@ -531,7 +531,7 @@ elif [ $ACTION == "delete" ] ; then
     # fi
 
 elif [ $ACTION == "conftest" ] ; then
-  if (whiptail --title "Manage tests" --yesno --no-button "Avancé" --yes-button "Suivant" "Normalement, cette partie est déjà configurée. Appuyez sur SUIVANT si vous voulez activer ou desactiver des tests ou sur AVANCÉE pour modifier les paramètres des tests." 10 78) then
+  if (whiptail --title "Manage tests" --yesno --no-button "Avancé" --yes-button "Suivant" "Normalement, cette partie est déjà configurée. Appuyez sur SUIVANT si vous voulez activer ou desactiver des tests ou sur AVANCÉ pour modifier les paramètres des tests." 10 78) then
     active_tests
     ./creation_meshconfig.py "${DIR}" "${tests_mesh}" "${tests_disj}" "1"
     apercu
