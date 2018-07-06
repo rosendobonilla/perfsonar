@@ -190,7 +190,7 @@ active_tests () {
 #Demander les informations concernant la sonde
 
 information () {
-   if (whiptail --title "Type de sonde" --yesno --yes-button "Observatoire" --no-button "Autre" "La sonde à ajouter s'agit d'une sonde qui appartient à l'observatoire (que l'on maitrise) ou d'une sonde d'une autre organisation (ex. celle de RENATER) ?" 12 78) then
+   if (whiptail --title "Type de sonde" --yesno --yes-button "Mesh" --no-button "Disjoint" "La sonde à ajouter s'agit d'une sonde qui appartient à l'observatoire (que l'on maitrise) ou d'une sonde d'une autre organisation (ex. celle de RENATER) ?" 12 78) then
       no_agent=0
    else
       org=$(whiptail --inputbox "Entrez le nom de l'organisation." 8 78 --title "Information" 3>&1 1>&2 2>&3)
