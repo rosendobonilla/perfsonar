@@ -248,15 +248,13 @@ information () {
 
 #Création du fichier data.yaml pour remplir le template
 
-creation_data_yaml () {
+creation_data_yaml () {   
    if [ $no_agent = 0 ] ; then
-     echo "desc: "$descr"" >> ./data.yaml
-     echo "add: "$addr"" >> ./data.yaml
-   else
      echo "org: "$org"" >> ./data.yaml
-     echo "desc: "$descr"" >> ./data.yaml
-     echo "add: "$addr"" >> ./data.yaml
    fi
+   echo "desc: "$descr"" >> ./data.yaml
+   echo "add: "$addr"" >> ./data.yaml
+   
    return 0
 }
 
